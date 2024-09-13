@@ -23,7 +23,10 @@ function App(props) {
         return res;
       },
       (error) => {
-        if (error.response.status === 401) {
+        if (
+          !error.config.url.includes("logout") &&
+          error.response.status === 401
+        ) {
           props.logout();
         }
         return error;
