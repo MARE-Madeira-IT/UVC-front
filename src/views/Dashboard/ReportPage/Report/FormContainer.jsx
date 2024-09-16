@@ -1,6 +1,4 @@
-import React, { useEffect, useState } from "react";
 import {
-  Button,
   Col,
   DatePicker,
   Form,
@@ -9,16 +7,14 @@ import {
   Modal,
   Row,
   Select,
-  Space,
 } from "antd";
-import styled from "styled-components";
-import { connect } from "react-redux";
-import { handleArrayToFormData, requiredRule } from "src/helper";
-import RemoteCascadeContainer from "../../ProjectPage/Site/RemoteCascadeContainer";
-import RemoteSelectContainer from "../../ProjectPage/Depth/RemoteSelectContainer";
-import debounce from "debounce";
-import { Map, Marker } from "react-map-gl";
 import moment from "moment";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import { requiredRule } from "src/helper";
+import styled from "styled-components";
+import RemoteSelectContainer from "../../ProjectPage/Depth/RemoteSelectContainer";
+import RemoteCascadeContainer from "../../ProjectPage/Site/RemoteCascadeContainer";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -40,10 +36,6 @@ function FormContainer(props) {
     undefined, //"D" + depth.id
     undefined, //"R" + replica
   ]);
-
-  const [latitude, setLatitude] = useState(32.606889622);
-  const [longitude, setLongitude] = useState(-16.8109375);
-  const [hasTouched, setHasTouched] = useState([false, false]);
 
   const { current, visible, projectId } = props;
 
@@ -131,31 +123,8 @@ function FormContainer(props) {
         "D" + current.depth.id, //"D" + depth.id
         "D" + current.replica, //"R" + replica
       ]);
-
-      handlePositionChange({
-        lngLat: { lat: current.latitude, lng: current.longitude },
-      });
     }
   }, [visible]);
-
-  const handleLatitude = (e) => {
-    if (e.target.value < 90 && e.target.value > -90) {
-      setLatitude(e.target.value);
-      setHasTouched([true, hasTouched[1]]);
-    }
-  };
-  const handleLongitude = (e) => {
-    setLongitude(e.target.value);
-    setHasTouched([hasTouched[0], true]);
-  };
-
-  const handlePositionChange = (e) => {
-    setLatitude(e.lngLat.lat);
-    setLongitude(e.lngLat.lng);
-    setHasTouched([true, true]);
-
-    form.setFieldsValue({ latitude: e.lngLat.lat, longitude: e.lngLat.lng });
-  };
 
   const handleSiteAndLocality = (e) => {
     const locality = props.localities.find((element) => element.id == e[0]);
@@ -314,67 +283,6 @@ function FormContainer(props) {
                   </Form.Item>
                 </Col>
               ))}
-            </Row>
-          </Col>
-          <Col span={24}>
-            <Row
-              style={{ marginTop: "30px" }}
-              align="middle"
-              type="flex"
-              gutter={32}
-            >
-              <Col xs={24} md={12}>
-                <h3>
-                  Introduce coordinates using the inputs below or move the
-                  picker on the map to the desired position.
-                </h3>
-                <Form.Item
-                  label="Latitude*"
-                  name="latitude"
-                  rules={requiredRule}
-                >
-                  <Input
-                    onChange={debounce(handleLatitude, 600)}
-                    placeholder="Latitude"
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Longitude*"
-                  name="longitude"
-                  rules={requiredRule}
-                >
-                  <Input
-                    onChange={debounce(handleLongitude, 600)}
-                    placeholder="Longitude"
-                  />
-                </Form.Item>
-              </Col>
-              <Col xs={24} md={12}>
-                <Map
-                  mapboxAccessToken="pk.eyJ1IjoidGlnZXJ3aGFsZSIsImEiOiJjanBncmNscnAwMWx3M3ZxdDF2cW8xYWZvIn0.LVgciVtYclOed_hZ9oXY2g"
-                  initialViewState={{
-                    latitude: latitude,
-                    longitude: longitude,
-                    zoom: 7,
-                  }}
-                  style={{
-                    height: "350px",
-                    width: "100%",
-                  }}
-                  mapStyle="mapbox://styles/tigerwhale/cjpgrt1sccjs92sqjfnuixnxc"
-                  onClick={handlePositionChange}
-                >
-                  {!isNaN(latitude) && !isNaN(longitude) && (
-                    <Marker
-                      draggable
-                      latitude={latitude}
-                      color="red"
-                      longitude={longitude}
-                      onDragEnd={handlePositionChange}
-                    />
-                  )}
-                </Map>
-              </Col>
             </Row>
           </Col>
         </Row>

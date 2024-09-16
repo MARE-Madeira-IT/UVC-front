@@ -23,7 +23,7 @@ function Locality(props) {
 
     const [filters, setFilters] = useState({ project: projectId });
     const [visible, setVisible] = useState(false)
-    const [current, setCurrent] = useState({})
+    const [current, setCurrent] = useState()
 
     useEffect(() => {
         props.fetchLocalities(1, filters);
@@ -34,7 +34,7 @@ function Locality(props) {
     }
 
     const handleCancel = () => {
-        setCurrent({});
+        setCurrent();
         setVisible(false)
     }
 

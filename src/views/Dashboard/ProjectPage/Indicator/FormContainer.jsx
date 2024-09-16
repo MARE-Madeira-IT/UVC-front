@@ -1,5 +1,5 @@
-import { Button, Col, Flex, Form, Input, Modal, Row, Select } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Button, Col, Form, Input, Modal, Row, Select } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -23,11 +23,9 @@ function FormContainer(props) {
   const handleOk = () => {
     form.validateFields().then((values) => {
       if (current) {
-        props
-          .update(current, { ...values, project_id: projectId })
-          .then(() => {
-            handleCancel();
-          });
+        props.update(current, { ...values, project_id: projectId }).then(() => {
+          handleCancel();
+        });
       } else {
         props.create({ ...values, project_id: projectId }).then(() => {
           handleCancel();
