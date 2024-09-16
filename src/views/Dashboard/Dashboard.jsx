@@ -1,15 +1,13 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import axiosConfig from "src/axiosConfig";
+import styled from "styled-components";
 import {
   fetchProjectInvites,
   fetchSelfProjects,
   respondToInvite,
 } from "../../../redux/redux-modules/project/actions";
-import styled from "styled-components";
-import TitleAddSection from "./Common/TitleAddSection";
 import Project from "./ProjectPage/Project/Project";
-import axiosConfig from "src/axiosConfig";
 
 const Container = styled.section`
   width: 100%;

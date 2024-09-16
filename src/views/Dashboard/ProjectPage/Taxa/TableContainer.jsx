@@ -218,7 +218,7 @@ function TableContainer({
         <RowOperation
           deleteRow
           updateRow
-          onUpdateClick={() => setCurrent(record)}
+          onUpdateClick={() => setCurrent(record.id)}
           onDeleteConfirm={() => handleDelete(record.id)}
         />
       ),

@@ -27,7 +27,7 @@ function Taxa(props) {
 
     const [filters, setFilters] = useState({ project: projectId });
     const [visible, setVisible] = useState(false)
-    const [current, setCurrent] = useState({})
+    const [current, setCurrent] = useState()
 
     useEffect(() => {
         props.fetchTaxas(1, filters);
@@ -38,7 +38,7 @@ function Taxa(props) {
     }, [])
 
     const handleCancel = () => {
-        setCurrent({});
+        setCurrent();
         setVisible(false)
     }
 

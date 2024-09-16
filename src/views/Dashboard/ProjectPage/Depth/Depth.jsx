@@ -46,7 +46,7 @@ function Depth(props) {
     return (
         <Container>
             <TitleAddSection
-                title="Depth(s)"
+                title="Depth categories"
                 handleClick={() => setVisible(true)}
             />
 

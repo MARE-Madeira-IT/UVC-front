@@ -1,4 +1,13 @@
-import { Checkbox, Col, Form, Input, Modal, Row } from "antd";
+import {
+  Checkbox,
+  Col,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Row,
+  Select,
+} from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
@@ -17,10 +26,9 @@ const CustomModal = styled(Modal)`
 
 function FormContainer(props) {
   const [form] = Form.useForm();
-  const [indicatorList, setIndicatorList] = useState([]);
   const [selectedIndicatorList, setSelectedIndicatorList] = useState([]);
 
-  const { current, visible, projectId } = props;
+  const { current, visible, projectId, taxas } = props;
 
   const handleOk = () => {
     form.validateFields().then((values) => {
@@ -33,12 +41,12 @@ function FormContainer(props) {
           indicators[indicator] = values[key];
         });
 
-      if (current.id) {
+      if (current) {
         props
-          .update(current.id, {
+          .update(current, {
             indicators,
             project_id: projectId,
-            id: current.id,
+            id: current,
             category_id: values?.category_id,
             name: values.name,
             genus: values.genus,
@@ -76,38 +84,30 @@ function FormContainer(props) {
   useEffect(() => {
     var aIndicators = {};
 
-    if (current.id) {
+    if (current) {
+      let currentTaxa = taxas.find((el) => el.id === current);
+
       let currentIndicatorList = [];
 
-      current.indicators.map((currentIndicator) => {
+      currentTaxa.indicators.map((currentIndicator) => {
         aIndicators["indicators." + currentIndicator.name] =
           currentIndicator.pivot.name;
-        currentIndicatorList.push(currentIndicator.name);
+        currentIndicatorList.push(currentIndicator);
       });
 
       setSelectedIndicatorList(currentIndicatorList);
-    }
 
-    form.setFieldsValue({
-      category_id: current?.category?.id,
-      name: current.name,
-      genus: current.genus,
-      species: current.species,
-      phylum: current.phylum,
+      form.setFieldsValue({
+        category_id: currentTaxa?.category?.id,
+        name: currentTaxa.name,
+        genus: currentTaxa.genus,
+        species: currentTaxa.species,
+        phylum: currentTaxa.phylum,
 
-      ...aIndicators,
-    });
-  }, [visible]);
-
-  useEffect(() => {
-    if (props.indicators.length && visible) {
-      let currentIndicatorList = [];
-      props.indicators.map((indicator) => {
-        currentIndicatorList.push(indicator.name);
+        ...aIndicators,
       });
-      setIndicatorList(currentIndicatorList);
     }
-  }, [props.indicators, visible]);
+  }, [visible]);
 
   return (
     <CustomModal
@@ -154,7 +154,7 @@ function FormContainer(props) {
           <Col span={24}>
             <p>Indicator(s)</p>
             <Checkbox.Group
-              options={indicatorList}
+              options={[...props.indicators].map((el) => el.name)}
               onChange={(e) => {
                 setSelectedIndicatorList(e);
               }}
@@ -168,18 +168,34 @@ function FormContainer(props) {
               <></>
             )}
           </Col>
-          {selectedIndicatorList.map((selectedIndicator, i) => (
-            <Col key={i} xs={24} md={12}>
-              <Form.Item
-                key={selectedIndicator}
-                label={selectedIndicator}
-                name={"indicators." + selectedIndicator}
-                rules={requiredRule}
-              >
-                <Input />
-              </Form.Item>
-            </Col>
-          ))}
+          {selectedIndicatorList.map((selectedIndicator, i) => {
+            let indicator = props.indicators.find(
+              (el) => el.name === selectedIndicator
+            );
+            return (
+              <Col key={i} xs={24} md={12}>
+                <Form.Item
+                  key={selectedIndicator}
+                  label={selectedIndicator}
+                  name={"indicators." + selectedIndicator}
+                  rules={requiredRule}
+                >
+                  {indicator.type === "number" ? (
+                    <InputNumber style={{ width: "100%" }} />
+                  ) : indicator.type === "select" ? (
+                    <Select
+                      options={indicator.values.map((el) => ({
+                        name: el,
+                        value: el,
+                      }))}
+                    />
+                  ) : (
+                    <Input />
+                  )}
+                </Form.Item>
+              </Col>
+            );
+          })}
         </Row>
       </Form>
     </CustomModal>
@@ -190,6 +206,7 @@ const mapStateToProps = (state) => {
   return {
     loading: state.project.loading,
     indicators: state.indicator.selector,
+    taxas: state.taxa.data,
   };
 };
 

@@ -76,6 +76,14 @@ const ProjectContainer = styled.div`
         border: 0px;
         box-shadow: 0px;
         display: flex;
+        gap: 15px;
+        color: white;
+        flex-direction: row;
+        align-items: center;
+
+        p {
+          margin: 0;
+        }
 
         img {
           width: 12px;
@@ -125,14 +133,14 @@ function Project(props) {
 
               <div className="links-container">
                 <Link to={"/dashboard/project/" + project.id + "/reports"}>
-                  {" "}
                   <button>
+                    <p>Surveys</p>
                     <img src="/assets/icons/edit.svg" alt="" />
                   </button>
                 </Link>
                 <Link to={"/dashboard/projects/" + project.id}>
-                  {" "}
                   <button>
+                    <p>Metadata</p>
                     <img src="/assets/icons/link.svg" alt="" />
                   </button>
                 </Link>
