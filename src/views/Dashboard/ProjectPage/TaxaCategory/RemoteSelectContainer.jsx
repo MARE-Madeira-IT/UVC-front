@@ -1,7 +1,7 @@
 import { Select } from "antd";
-import React, { useEffect } from "react";
-import { fetchSelectorTaxaCategories } from "../../../../../redux/redux-modules/taxa_category/actions";
+import { useEffect } from "react";
 import { connect } from "react-redux";
+import { fetchSelectorTaxaCategories } from "../../../../../redux/redux-modules/taxa_category/actions";
 
 function RemoteSelectContainer(props) {
   useEffect(() => {

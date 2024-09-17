@@ -1,13 +1,13 @@
 import { Input, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
 import {
-  createDepth,
-  deleteDepth,
-  fetchDepths,
-  updateDepth,
-} from "../../../../../redux/redux-modules/depth/actions";
+  createTaxaCategory,
+  deleteTaxaCategory,
+  fetchTaxaCategories,
+  updateTaxaCategory,
+} from "../../../../../redux/redux-modules/taxa_category/actions";
+import styled from "styled-components";
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
@@ -17,28 +17,24 @@ const ContentContainer = styled.div`
   margin: auto;
 `;
 
-const Container = styled.section`
+const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
 `;
 
-function Depth(props) {
-  const { data, loading, meta, projectId } = props;
+function TaxaCategory(props) {
+  const { data, loading, meta, projectId, indicators } = props;
 
   const [filters, setFilters] = useState({ project: projectId });
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState({});
+  const [current, setCurrent] = useState();
 
   useEffect(() => {
-    props.fetchDepths(1, filters);
+    props.fetchTaxaCategories(1, filters);
   }, [filters]);
 
-  function handlePageChange(pagination) {
-    props.fetchDepths(pagination.current, filters);
-  }
-
   const handleCancel = () => {
-    setCurrent({});
+    setCurrent();
     setVisible(false);
   };
 
@@ -47,10 +43,14 @@ function Depth(props) {
     setVisible(true);
   };
 
+  function handlePageChange(pagination) {
+    props.fetchTaxaCategories(pagination.current, filters);
+  }
+
   return (
     <Container>
       <TitleAddSection
-        title="Depth categories"
+        title="Project taxa"
         handleClick={() => setVisible(true)}
       />
 
@@ -59,8 +59,8 @@ function Depth(props) {
           visible={visible}
           handleCancel={handleCancel}
           current={current}
-          create={props.createDepth}
-          update={props.updateDepth}
+          create={props.createTaxaCategory}
+          update={props.updateTaxaCategory}
           projectId={projectId}
         />
         <Row style={{ marginBottom: "20px" }}>
@@ -68,7 +68,7 @@ function Depth(props) {
             onSearch={(e) => setFilters({ ...filters, search: e })}
             size="large"
             type="search"
-            placeholder="Search by depth"
+            placeholder="Search by category"
           />
         </Row>
         <TableContainer
@@ -76,8 +76,9 @@ function Depth(props) {
           data={data}
           loading={loading}
           meta={meta}
+          indicators={indicators}
           setCurrent={handleEdit}
-          handleDelete={props.deleteDepth}
+          handleDelete={props.deleteTaxaCategory}
         />
       </ContentContainer>
     </Container>
@@ -86,19 +87,20 @@ function Depth(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchDepths: (page, filters) => dispatch(fetchDepths(page, filters)),
-    updateDepth: (id, data) => dispatch(updateDepth(id, data)),
-    createDepth: (data) => dispatch(createDepth(data)),
-    deleteDepth: (id) => dispatch(deleteDepth(id)),
+    fetchTaxaCategories: (page, filters) =>
+      dispatch(fetchTaxaCategories(page, filters)),
+    updateTaxaCategory: (id, data) => dispatch(updateTaxaCategory(id, data)),
+    createTaxaCategory: (data) => dispatch(createTaxaCategory(data)),
+    deleteTaxaCategory: (id) => dispatch(deleteTaxaCategory(id)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.depth.loading,
-    data: state.depth.data,
-    meta: state.depth.meta,
+    loading: state.taxa_category.loading,
+    data: state.taxa_category.data,
+    meta: state.taxa_category.meta,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Depth);
+export default connect(mapStateToProps, mapDispatchToProps)(TaxaCategory);

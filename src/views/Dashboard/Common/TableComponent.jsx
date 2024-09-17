@@ -1,5 +1,6 @@
 import { Spin } from "antd";
 import Table from "antd/es/table";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 const Container = styled.div`
@@ -58,20 +59,28 @@ function TableComponent({
   rowKey = "id",
   handleExpandable = { childrenColumnName: "children" },
   bordered = false,
-  title,
   handleShowSizeChange,
   scroll,
   rowSelection,
   editable,
 }) {
+  useEffect(() => {
+    //This makes the table is on a page with no data after deleting the only row
+    if (
+      meta?.total &&
+      meta?.current_page > 1 &&
+      meta?.current_page > Math.ceil(meta.total / 10)
+    ) {
+      handlePageChange(meta.current_page - 1);
+    }
+  }, [meta?.total]);
+
   if (loading && !data)
     return <Spin style={{ width: "100%" }} tip="Loading data" />;
 
   return (
     <Container>
       <Table
-        chi
-        // scroll={{ x: "100%" }}
         rowClassName={(row, i) => {
           let className = "";
 
@@ -91,7 +100,7 @@ function TableComponent({
           meta
             ? {
                 showQuickJumper: showQuickJumper,
-                showSizeChanger: true,
+                showSizeChanger: false,
                 onShowSizeChange: handleShowSizeChange,
                 total: meta.total,
                 showTotal: (total, range) =>

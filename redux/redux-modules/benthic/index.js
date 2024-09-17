@@ -50,6 +50,7 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: [...state.data, action.payload.data.data],
+        meta: { ...state.meta, total: state.meta.total + 1 },
       };
 
     case `${types.DELETE_BENTHIC}_FULFILLED`:
@@ -57,6 +58,10 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: state.data.filter((record) => record.id !== action.meta.id),
+        meta: {
+          ...state.meta,
+          total: state.meta.total - 1,
+        },
       };
 
     case `${types.UPDATE_BENTHIC}_FULFILLED`:

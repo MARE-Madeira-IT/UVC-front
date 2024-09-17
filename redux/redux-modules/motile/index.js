@@ -61,6 +61,13 @@ export default (state = initialState, action = {}) => {
                 : record
             )
           : [...state.data, action.payload.data.data],
+        meta: state.data.find(
+          (record) =>
+            record.report_id === action.payload.data.data.report_id &&
+            record.type === action.payload.data.data.type
+        )
+          ? { ...state.meta, total: state.meta.total + 1 }
+          : state.meta,
       };
 
     case `${types.DELETE_MOTILE}_FULFILLED`:
@@ -68,6 +75,10 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: state.data.filter((record) => record.id !== action.meta.id),
+        meta: {
+          ...state.meta,
+          total: state.meta.total - 1,
+        },
       };
 
     case `${types.UPDATE_MOTILE}_FULFILLED`:

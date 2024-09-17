@@ -1,5 +1,5 @@
 import { PlusOutlined } from "@ant-design/icons";
-import { Button, Cascader, Divider, Flex, Input, Select, Tooltip } from "antd";
+import { Button, Cascader, Flex, Input, Select, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import {
@@ -63,7 +63,7 @@ function RemoteCascadeContainer(props) {
 
   useEffect(() => {
     if (value && options?.length > 0) {
-      let possibleIds = []; 
+      let possibleIds = [];
       if (options[0]?.taxas) {
         options.forEach((cat) => {
           possibleIds = [...possibleIds, ...cat.taxas.map((taxa) => taxa.id)];
@@ -100,6 +100,7 @@ function RemoteCascadeContainer(props) {
             onChange(e);
           }
         }}
+        onSearch={() => setOpenCascader(true)}
         dropdownRender={(menus) => {
           return (
             <>
@@ -116,7 +117,6 @@ function RemoteCascadeContainer(props) {
               />
               <div style={{ zIndex: 200, position: "relative" }}>
                 {menus}
-                <Divider />
                 <Flex>
                   <Select
                     defaultValue={1}

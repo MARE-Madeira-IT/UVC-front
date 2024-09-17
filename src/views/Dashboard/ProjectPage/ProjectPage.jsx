@@ -1,17 +1,18 @@
-import React, { useEffect } from "react";
-import styled from "styled-components";
-import Statistics from "./Statistics";
-import Members from "./Members/Members";
-import Locality from "./Locality/Locality";
 import { Col, message, Row } from "antd";
-import Taxa from "./Taxa/Taxa";
+import { useEffect } from "react";
+import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import Indicator from "./Indicator/Indicator";
+import axiosConfig from "src/axiosConfig";
+import styled from "styled-components";
+import { fetchPermissions } from "../../../../redux/redux-modules/permissions/actions";
 import Depth from "./Depth/Depth";
 import Function from "./Function/Function";
-import axiosConfig from "src/axiosConfig";
-import { connect } from "react-redux";
-import { fetchPermissions } from "../../../../redux/redux-modules/permissions/actions";
+import Indicator from "./Indicator/Indicator";
+import Locality from "./Locality/Locality";
+import Members from "./Members/Members";
+import Statistics from "./Statistics";
+import Taxa from "./Taxa/Taxa";
+import TaxaCategory from "./TaxaCategory/TaxaCategory";
 
 const Container = styled.section`
   width: 100%;
@@ -58,14 +59,19 @@ function ProjectPage(props) {
         <Taxa projectId={id} />
       </Row>
       <Row gutter={64}>
-        <Col md={24} lg={8}>
+        <Col md={24} lg={12}>
           <Indicator projectId={id} />
         </Col>
-        <Col md={24} lg={8}>
+        <Col md={24} lg={12}>
           <Depth projectId={id} />
         </Col>
-        <Col md={24} lg={8}>
+      </Row>
+      <Row gutter={64}>
+        <Col md={24} lg={12}>
           <Function projectId={id} />
+        </Col>
+        <Col md={24} lg={12}>
+          <TaxaCategory projectId={id} />
         </Col>
       </Row>
     </Container>
