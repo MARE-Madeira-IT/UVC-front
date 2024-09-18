@@ -1,7 +1,7 @@
 import { types } from "./types";
 import axiosConfig from "../../../src/axiosConfig";
 
-export const fetchPermissions = (project) => ({
+export const fetchPermissions = (surveyProgram) => ({
   type: types.FETCH_PERMISSIONS,
-  payload: axiosConfig.get(`/permissions/${project}`),
+  payload: axiosConfig.get(`/permissions/${surveyProgram}`),
 });

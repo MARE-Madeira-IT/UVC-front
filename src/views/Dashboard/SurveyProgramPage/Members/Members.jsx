@@ -2,10 +2,7 @@ import { Input, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import {
-  deleteBenthic,
-  fetchBenthics,
-} from "../../../../../redux/redux-modules/benthic/actions";
+import { fetchUsers } from "../../../../../redux/redux-modules/user/actions";
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
@@ -20,47 +17,41 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-function Benthic(props) {
-  const { data, loading, meta, surveyProgramId } = props;
-
+function Members({ data, loading, meta, fetchUsers, surveyProgramId, permissions }) {
   const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState();
+  const [currentUser, setCurrentUser] = useState();
 
   useEffect(() => {
-    props.fetchBenthics(1, filters);
+    fetchUsers(1, filters);
   }, [filters]);
 
   function handlePageChange(pagination) {
-    props.fetchBenthics(pagination.current, filters);
+    fetchUsers(pagination.current, filters);
   }
 
-  const handleCancel = () => {
-    setCurrent();
-    setVisible(false);
-  };
-
   const handleEdit = (aCurrent) => {
-    setCurrent(aCurrent);
+    setCurrentUser(aCurrent);
     setVisible(true);
   };
 
   return (
     <Container>
       <TitleAddSection
-        title="Benthic data"
+        title="Member(s)"
+        hideAdd={!permissions.includes("admin")}
         handleClick={() => setVisible(true)}
       />
       <ContentContainer>
         <FormContainer
+          currentUser={currentUser}
           visible={visible}
-          handleCancel={handleCancel}
-          current={current}
+          setVisible={setVisible}
           surveyProgramId={surveyProgramId}
         />
         <Row style={{ marginBottom: "20px" }}>
           <Input.Search
-            onSearch={(e) => setFilters({...filters, search: e })}
+            onSearch={(e) => setFilters({ ...filters, search: e })}
             size="large"
             type="search"
             placeholder="Search by name or email"
@@ -68,11 +59,11 @@ function Benthic(props) {
         </Row>
         <TableContainer
           handlePageChange={handlePageChange}
-          data={data}
+          data={[...data]}
           loading={loading}
           meta={meta}
-          setCurrent={handleEdit}
-          handleDelete={props.deleteBenthic}
+          setVisible={setVisible}
+          setCurrentUser={handleEdit}
         />
       </ContentContainer>
     </Container>
@@ -81,17 +72,17 @@ function Benthic(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchBenthics: (page, filters) => dispatch(fetchBenthics(page, filters)),
-    deleteBenthic: (id) => dispatch(deleteBenthic(id)),
+    fetchUsers: (page, filters) => dispatch(fetchUsers(page, filters)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.benthic.loading,
-    data: state.benthic.data,
-    meta: state.benthic.meta,
+    loading: state.user.loading,
+    data: state.user.data,
+    meta: state.user.meta,
+    permissions: state.permissions.data,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Benthic);
+export default connect(mapStateToProps, mapDispatchToProps)(Members);

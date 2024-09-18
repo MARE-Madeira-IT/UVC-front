@@ -23,13 +23,13 @@ function ReportPage(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosConfig.defaults.headers.common["project"] = id;
+    axiosConfig.defaults.headers.common["survey_program"] = id;
 
     fetchPermissions(id).catch((err) => {
       if (err.response.status === 403) {
         messageApi.open({
           type: "error",
-          content: "You don't have access to this project",
+          content: "You don't have access to this survey program",
         });
         navigate("/dashboard");
       }
@@ -41,16 +41,16 @@ function ReportPage(props) {
       {contextHolder}
       <Row gutter={64}>
         <Col span={24}>
-          <Report projectId={id} />
+          <Report surveyProgramId={id} />
         </Col>
         <Col span={24}>
-          <ReportMap projectId={id} />
+          <ReportMap surveyProgramId={id} />
         </Col>
         <Col span={24}>
-          <Motile projectId={id} />
+          <Motile surveyProgramId={id} />
         </Col>
         <Col span={24}>
-          <Benthic projectId={id} />
+          <Benthic surveyProgramId={id} />
         </Col>
       </Row>
     </Container>

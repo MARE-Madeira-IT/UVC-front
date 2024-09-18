@@ -1,45 +1,39 @@
 import { Select } from 'antd'
 import React, { useEffect } from 'react'
-import { fetchSelectorReports } from '../../../../../redux/redux-modules/report/actions'
+import { fetchSelectorFunctions } from '../../../../../redux/redux-modules/function/actions'
 import { connect } from 'react-redux'
 
 function RemoteSelectContainer(props) {
 
     useEffect(() => {
-        props.fetchSelectorReports({ surveyProgram: props.surveyProgramId })
+        props.fetchSelectorFunctions({ survey_program_id: props.surveyProgramId })
     }, [])
 
-    const labelRender = (props) => {
-        const { label, value } = props;
-
-        return <span>{label} (#{value})</span>;
-    };
 
     return (
         <Select
             value={props.value}
-            labelRender={labelRender}
             showSearch
             fieldNames={{
-                label: "code",
+                label: "name",
                 value: "id"
             }}
-            options={props.data}
             onChange={props.onChange}
+            options={props.data}
         />
     )
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        fetchSelectorReports: (filters) => dispatch(fetchSelectorReports(filters)),
+        fetchSelectorFunctions: (filters) => dispatch(fetchSelectorFunctions(filters)),
     };
 };
 
 const mapStateToProps = (state) => {
     return {
-        data: state.report.selector,
-        loading: state.report.loading,
+        data: state._function.selector,
+        loading: state._function.loading,
     };
 };
 

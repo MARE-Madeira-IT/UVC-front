@@ -3,11 +3,11 @@ import { connect } from "react-redux";
 import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import {
-  fetchProjectInvites,
-  fetchSelfProjects,
+  fetchSurveyProgramInvites,
+  fetchSelfSurveyPrograms,
   respondToInvite,
-} from "../../../redux/redux-modules/project/actions";
-import Project from "./ProjectPage/Project/Project";
+} from "../../../redux/redux-modules/surveyProgram/actions";
+import SurveyProgram from "./SurveyProgramPage/SurveyProgram/SurveyProgram";
 
 const Container = styled.section`
   width: 100%;
@@ -62,13 +62,13 @@ function Dashboard(props) {
   const { user, invites } = props;
 
   useEffect(() => {
-    axiosConfig.defaults.headers.common["project"] = null;
-    props.fetchProjectInvites();
+    axiosConfig.defaults.headers.common["survey_program"] = null;
+    props.fetchSurveyProgramInvites();
   }, []);
 
   const handleInvite = (id, status) => {
     props.respondToInvite(id, { status: status }).then(() => {
-      props.fetchSelfProjects();
+      props.fetchSelfSurveyPrograms();
     });
   };
 
@@ -88,7 +88,7 @@ function Dashboard(props) {
           ? invites?.map((invite) => (
               <Notification key={invite.id}>
                 <p>
-                  You have been invited to the project {invite.project.name}
+                  You have been invited to the survey program {invite.surveyProgram.name}
                 </p>
                 <p className="date">{invite.created_at}</p>
                 <div>
@@ -101,14 +101,14 @@ function Dashboard(props) {
             ))
           : "You don't have any notifications right now."}
       </UserDataContainer>
-      <Project />
+      <SurveyProgram />
     </Container>
   );
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSelfProjects: () => dispatch(fetchSelfProjects()),
-    fetchProjectInvites: () => dispatch(fetchProjectInvites()),
+    fetchSelfSurveyPrograms: () => dispatch(fetchSelfSurveyPrograms()),
+    fetchSurveyProgramInvites: () => dispatch(fetchSurveyProgramInvites()),
     respondToInvite: (id, data) => dispatch(respondToInvite(id, data)),
   };
 };
@@ -116,8 +116,8 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
-    projects: state.project.selfData,
-    invites: state.project.invites,
+    surveyPrograms: state.surveyProgram.selfData,
+    invites: state.surveyProgram.invites,
   };
 };
 

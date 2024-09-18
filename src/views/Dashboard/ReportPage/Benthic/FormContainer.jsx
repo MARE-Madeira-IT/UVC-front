@@ -5,13 +5,13 @@ import { requiredRule } from "src/helper";
 import styled from "styled-components";
 import { fetchSelectorSubstrates } from "../../../../../redux/redux-modules/substrate/actions";
 import { fetchSelectorTaxas } from "../../../../../redux/redux-modules/taxa/actions";
-import RemoteCascadeContainer from "../../ProjectPage/Taxa/RemoteCascadeContainer";
+import RemoteCascadeContainer from "../../SurveyProgramPage/Taxa/RemoteCascadeContainer";
 
 import {
   createBenthic,
   updateBenthic,
 } from "../../../../../redux/redux-modules/benthic/actions";
-import SubstrateRemoteSelectContainer from "../../ProjectPage/Substrate/ExternalRemoteSelectContainer";
+import SubstrateRemoteSelectContainer from "../../SurveyProgramPage/Substrate/ExternalRemoteSelectContainer";
 import ReportRemoteSelectContainer from "../Report/RemoteSelectContainer";
 
 const CustomModal = styled(Modal)`
@@ -28,7 +28,7 @@ function FormContainer(props) {
   const {
     current,
     visible,
-    projectId,
+    surveyProgramId,
     create,
     update,
     loading,
@@ -40,11 +40,11 @@ function FormContainer(props) {
   const handleOk = () => {
     form.validateFields().then((values) => {
       if (current) {
-        update(current, { ...values, project_id: projectId }).then(() => {
+        update(current, { ...values, survey_program_id: surveyProgramId }).then(() => {
           handleCancel();
         });
       } else {
-        create({ ...values, project_id: projectId })
+        create({ ...values, survey_program_id: surveyProgramId })
           .then(() => {
             handleCancel();
           })
@@ -125,8 +125,8 @@ function FormContainer(props) {
   };
 
   useEffect(() => {
-    props.fetchSelectorSubstrates({ project_id: projectId });
-    props.fetchSelectorTaxas({ project: projectId });
+    props.fetchSelectorSubstrates({ survey_program_id: surveyProgramId });
+    props.fetchSelectorTaxas({ surveyProgram: surveyProgramId });
   }, []);
 
   useEffect(() => {
@@ -217,7 +217,7 @@ function FormContainer(props) {
         <Row gutter={32}>
           <Col span={24}>
             <Form.Item label="Sample" name="report_id" rules={requiredRule}>
-              <ReportRemoteSelectContainer projectId={projectId} />
+              <ReportRemoteSelectContainer surveyProgramId={surveyProgramId} />
             </Form.Item>
           </Col>
 
@@ -245,7 +245,7 @@ function FormContainer(props) {
                           rules={requiredRule}
                         >
                           <SubstrateRemoteSelectContainer
-                            projectId={projectId}
+                            surveyProgramId={surveyProgramId}
                           />
                         </Form.Item>
                       </Col>
@@ -259,7 +259,7 @@ function FormContainer(props) {
                           <RemoteCascadeContainer
                             loadTaxas={false}
                             categories={["macroinv", "algae", "other"]}
-                            projectId={projectId}
+                            surveyProgramId={surveyProgramId}
                           />
                         </Form.Item>
                       </Col>

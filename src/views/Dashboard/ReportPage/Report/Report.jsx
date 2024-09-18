@@ -25,8 +25,8 @@ const ContentContainer = styled.div`
 `;
 
 function Report(props) {
-  const { data, loading, meta, projectId, permissions } = props;
-  const [filters, setFilters] = useState({ project: projectId });
+  const { data, loading, meta, surveyProgramId, permissions } = props;
+  const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState({});
 
@@ -64,7 +64,7 @@ function Report(props) {
           current={current}
           create={props.createReport}
           update={props.updateReport}
-          projectId={projectId}
+          surveyProgramId={surveyProgramId}
         />
         <Row style={{ marginBottom: "20px" }}>
           <Input.Search

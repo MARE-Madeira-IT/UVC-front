@@ -14,8 +14,8 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
-import RemoteSelectContainer from "../../ProjectPage/SizeCategory/RemoteSelectContainer";
-import RemoteCascadeContainer from "../../ProjectPage/Taxa/RemoteCascadeContainer";
+import RemoteSelectContainer from "../../SurveyProgramPage/SizeCategory/RemoteSelectContainer";
+import RemoteCascadeContainer from "../../SurveyProgramPage/Taxa/RemoteCascadeContainer";
 import SurveySelectContainer from "../Report/RemoteSelectContainer";
 
 const CustomModal = styled(Modal)`
@@ -30,7 +30,7 @@ const CustomModal = styled(Modal)`
 
 function FormContainer(props) {
   const [form] = Form.useForm();
-  const { current, visible, projectId, motiles } = props;
+  const { current, visible, surveyProgramId, motiles } = props;
   const type = Form.useWatch("type", form);
 
   const handleOk = () => {
@@ -38,7 +38,7 @@ function FormContainer(props) {
       if (current) {
         props
           .update(current, {
-            project_id: projectId,
+            survey_program_id: surveyProgramId,
             report_id: values.report_id,
             type: values.type,
             motiles: values.motiles.map((el) => {
@@ -57,7 +57,7 @@ function FormContainer(props) {
       } else {
         props
           .create({
-            project_id: projectId,
+            survey_program_id: surveyProgramId,
             report_id: values.report_id,
             type: values.type,
             motiles: values.motiles.map((el) => {
@@ -148,7 +148,7 @@ function FormContainer(props) {
         <Row gutter={16}>
           <Col xs={24} md={12}>
             <Form.Item label="Sample" name="report_id" rules={requiredRule}>
-              <SurveySelectContainer projectId={projectId} />
+              <SurveySelectContainer surveyProgramId={surveyProgramId} />
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
@@ -180,7 +180,7 @@ function FormContainer(props) {
                             <RemoteCascadeContainer
                               disabled={!type}
                               species={getTaxaFilters(type).species}
-                              projectId={projectId}
+                              surveyProgramId={surveyProgramId}
                               categories={getTaxaFilters(type).categories}
                             />
                           </Form.Item>

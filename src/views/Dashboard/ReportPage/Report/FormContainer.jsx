@@ -13,8 +13,8 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
-import RemoteSelectContainer from "../../ProjectPage/Depth/RemoteSelectContainer";
-import RemoteCascadeContainer from "../../ProjectPage/Site/RemoteCascadeContainer";
+import RemoteSelectContainer from "../../SurveyProgramPage/Depth/RemoteSelectContainer";
+import RemoteCascadeContainer from "../../SurveyProgramPage/Site/RemoteCascadeContainer";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -37,7 +37,7 @@ function FormContainer(props) {
     undefined, //"R" + replica
   ]);
 
-  const { current, visible, projectId } = props;
+  const { current, visible, surveyProgramId } = props;
 
   const handleOk = () => {
     form.validateFields().then((values) => {
@@ -51,7 +51,7 @@ function FormContainer(props) {
 
       var formData = {
         ...values,
-        project_id: projectId,
+        survey_program_id: surveyProgramId,
         site_id: values.site[1],
         functions: initFunctions,
       };
@@ -184,7 +184,7 @@ function FormContainer(props) {
             >
               <RemoteCascadeContainer
                 onChange={handleSiteAndLocality}
-                projectId={projectId}
+                surveyProgramId={surveyProgramId}
               />
             </Form.Item>
           </Col>
@@ -192,7 +192,7 @@ function FormContainer(props) {
             <Form.Item label="Depth" name="depth_id" rules={requiredRule}>
               <RemoteSelectContainer
                 onChange={handleDepth}
-                projectId={projectId}
+                surveyProgramId={surveyProgramId}
               />
             </Form.Item>
           </Col>

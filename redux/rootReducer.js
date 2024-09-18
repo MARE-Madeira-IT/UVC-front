@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import auth from "./redux-modules/auth";
 import contact from "./redux-modules/contact";
-import project from "./redux-modules/project";
+import surveyProgram from "./redux-modules/surveyProgram";
 import report from "./redux-modules/report";
 import locality from "./redux-modules/locality";
 import user from "./redux-modules/user";
@@ -19,7 +19,7 @@ import permissions from "./redux-modules/permissions";
 const rootReducer = combineReducers({
   auth,
   contact,
-  project,
+  surveyProgram,
   report,
   locality,
   user,

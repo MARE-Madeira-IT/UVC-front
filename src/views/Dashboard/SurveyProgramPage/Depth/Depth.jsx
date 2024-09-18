@@ -3,9 +3,11 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import {
-  deleteBenthic,
-  fetchBenthics,
-} from "../../../../../redux/redux-modules/benthic/actions";
+  createDepth,
+  deleteDepth,
+  fetchDepths,
+  updateDepth,
+} from "../../../../../redux/redux-modules/depth/actions";
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
@@ -15,28 +17,28 @@ const ContentContainer = styled.div`
   margin: auto;
 `;
 
-const Container = styled.div`
+const Container = styled.section`
   width: 100%;
   box-sizing: border-box;
 `;
 
-function Benthic(props) {
+function Depth(props) {
   const { data, loading, meta, surveyProgramId } = props;
 
   const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState();
+  const [current, setCurrent] = useState({});
 
   useEffect(() => {
-    props.fetchBenthics(1, filters);
+    props.fetchDepths(1, filters);
   }, [filters]);
 
   function handlePageChange(pagination) {
-    props.fetchBenthics(pagination.current, filters);
+    props.fetchDepths(pagination.current, filters);
   }
 
   const handleCancel = () => {
-    setCurrent();
+    setCurrent({});
     setVisible(false);
   };
 
@@ -48,22 +50,25 @@ function Benthic(props) {
   return (
     <Container>
       <TitleAddSection
-        title="Benthic data"
+        title="Depth categories"
         handleClick={() => setVisible(true)}
       />
+
       <ContentContainer>
         <FormContainer
           visible={visible}
           handleCancel={handleCancel}
           current={current}
+          create={props.createDepth}
+          update={props.updateDepth}
           surveyProgramId={surveyProgramId}
         />
         <Row style={{ marginBottom: "20px" }}>
           <Input.Search
-            onSearch={(e) => setFilters({...filters, search: e })}
+            onSearch={(e) => setFilters({ ...filters, search: e })}
             size="large"
             type="search"
-            placeholder="Search by name or email"
+            placeholder="Search by depth"
           />
         </Row>
         <TableContainer
@@ -72,7 +77,7 @@ function Benthic(props) {
           loading={loading}
           meta={meta}
           setCurrent={handleEdit}
-          handleDelete={props.deleteBenthic}
+          handleDelete={props.deleteDepth}
         />
       </ContentContainer>
     </Container>
@@ -81,17 +86,19 @@ function Benthic(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchBenthics: (page, filters) => dispatch(fetchBenthics(page, filters)),
-    deleteBenthic: (id) => dispatch(deleteBenthic(id)),
+    fetchDepths: (page, filters) => dispatch(fetchDepths(page, filters)),
+    updateDepth: (id, data) => dispatch(updateDepth(id, data)),
+    createDepth: (data) => dispatch(createDepth(data)),
+    deleteDepth: (id) => dispatch(deleteDepth(id)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.benthic.loading,
-    data: state.benthic.data,
-    meta: state.benthic.meta,
+    loading: state.depth.loading,
+    data: state.depth.data,
+    meta: state.depth.meta,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Benthic);
+export default connect(mapStateToProps, mapDispatchToProps)(Depth);

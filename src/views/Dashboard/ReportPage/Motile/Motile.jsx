@@ -25,9 +25,9 @@ const Container = styled.div`
 `;
 
 function Motile(props) {
-  const { data, loading, meta, projectId } = props;
+  const { data, loading, meta, surveyProgramId } = props;
 
-  const [filters, setFilters] = useState({ project: projectId });
+  const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState();
 
@@ -35,7 +35,7 @@ function Motile(props) {
     props.fetchMotiles(1, filters);
   }, [filters]);
   useEffect(() => {
-    props.fetchSelectorTaxas({ project: projectId });
+    props.fetchSelectorTaxas({ surveyProgram: surveyProgramId });
   }, []);
 
   function handlePageChange(pagination) {
@@ -63,7 +63,7 @@ function Motile(props) {
           current={current}
           create={props.createMotile}
           update={props.updateMotile}
-          projectId={projectId}
+          surveyProgramId={surveyProgramId}
         />
         <Row style={{ marginBottom: "20px" }}>
           <Input.Search

@@ -1,11 +1,13 @@
 import { Input, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import styled from "styled-components";
 import {
-  deleteBenthic,
-  fetchBenthics,
-} from "../../../../../redux/redux-modules/benthic/actions";
+  createTaxaCategory,
+  deleteTaxaCategory,
+  fetchTaxaCategories,
+  updateTaxaCategory,
+} from "../../../../../redux/redux-modules/taxa_category/actions";
+import styled from "styled-components";
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
@@ -20,20 +22,16 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-function Benthic(props) {
-  const { data, loading, meta, surveyProgramId } = props;
+function TaxaCategory(props) {
+  const { data, loading, meta, surveyProgramId, indicators } = props;
 
   const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState();
 
   useEffect(() => {
-    props.fetchBenthics(1, filters);
+    props.fetchTaxaCategories(1, filters);
   }, [filters]);
-
-  function handlePageChange(pagination) {
-    props.fetchBenthics(pagination.current, filters);
-  }
 
   const handleCancel = () => {
     setCurrent();
@@ -45,25 +43,32 @@ function Benthic(props) {
     setVisible(true);
   };
 
+  function handlePageChange(pagination) {
+    props.fetchTaxaCategories(pagination.current, filters);
+  }
+
   return (
     <Container>
       <TitleAddSection
-        title="Benthic data"
+        title="Survey program taxa"
         handleClick={() => setVisible(true)}
       />
+
       <ContentContainer>
         <FormContainer
           visible={visible}
           handleCancel={handleCancel}
           current={current}
+          create={props.createTaxaCategory}
+          update={props.updateTaxaCategory}
           surveyProgramId={surveyProgramId}
         />
         <Row style={{ marginBottom: "20px" }}>
           <Input.Search
-            onSearch={(e) => setFilters({...filters, search: e })}
+            onSearch={(e) => setFilters({ ...filters, search: e })}
             size="large"
             type="search"
-            placeholder="Search by name or email"
+            placeholder="Search by category"
           />
         </Row>
         <TableContainer
@@ -71,8 +76,9 @@ function Benthic(props) {
           data={data}
           loading={loading}
           meta={meta}
+          indicators={indicators}
           setCurrent={handleEdit}
-          handleDelete={props.deleteBenthic}
+          handleDelete={props.deleteTaxaCategory}
         />
       </ContentContainer>
     </Container>
@@ -81,17 +87,20 @@ function Benthic(props) {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchBenthics: (page, filters) => dispatch(fetchBenthics(page, filters)),
-    deleteBenthic: (id) => dispatch(deleteBenthic(id)),
+    fetchTaxaCategories: (page, filters) =>
+      dispatch(fetchTaxaCategories(page, filters)),
+    updateTaxaCategory: (id, data) => dispatch(updateTaxaCategory(id, data)),
+    createTaxaCategory: (data) => dispatch(createTaxaCategory(data)),
+    deleteTaxaCategory: (id) => dispatch(deleteTaxaCategory(id)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.benthic.loading,
-    data: state.benthic.data,
-    meta: state.benthic.meta,
+    loading: state.taxa_category.loading,
+    data: state.taxa_category.data,
+    meta: state.taxa_category.meta,
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Benthic);
+export default connect(mapStateToProps, mapDispatchToProps)(TaxaCategory);
