@@ -26,7 +26,7 @@ const ContentContainer = styled.div`
 
 function Report(props) {
   const { data, loading, meta, surveyProgramId, permissions } = props;
-  const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
+  const [filters, setFilters] = useState({ survey_program: surveyProgramId });
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState({});
 

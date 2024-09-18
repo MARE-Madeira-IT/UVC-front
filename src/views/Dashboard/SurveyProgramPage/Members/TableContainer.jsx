@@ -30,7 +30,7 @@ function TableContainer({
   meta,
   handlePageChange,
   setCurrentUser,
-  setVisible,
+  handleDelete,
   permissions,
   auth_user,
 }) {
@@ -56,7 +56,11 @@ function TableContainer({
       title: "Email",
       dataIndex: "email",
     },
-
+    {
+      title: "State",
+      dataIndex: "accepted",
+      render: (accepted) => (accepted ? "Member" : "Invited"),
+    },
     {
       title: "",
       dataIndex: "Operation",
@@ -68,6 +72,7 @@ function TableContainer({
               onUpdateClick={() => {
                 setCurrentUser(record.id);
               }}
+              onDeleteConfirm={() => handleDelete(record.id)}
             />
           );
         }

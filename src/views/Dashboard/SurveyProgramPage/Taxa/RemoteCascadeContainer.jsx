@@ -179,7 +179,6 @@ function RemoteCascadeContainer(props) {
                         setCreateTaxaError(null);
                       } catch (err) {
                         setCreateTaxaError(err);
-                        console.log(err);
                       }
                     }}
                   />

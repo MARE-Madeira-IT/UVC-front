@@ -2,8 +2,10 @@ import { Col, Form, Input, message, Modal, Row, Switch } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { inviteMember } from "../../../../../redux/redux-modules/surveyProgram/actions";
-import { updateMember } from "../../../../../redux/redux-modules/user/actions";
+import {
+  updateMember,
+  inviteMember,
+} from "../../../../../redux/redux-modules/user/actions";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -32,12 +34,11 @@ function FormContainer({
   const create = () => {
     form.validateFields().then((values) => {
       if (currentUser) {
-        updateMember(surveyProgramId, currentUser, values)
+        updateMember(currentUser, values)
           .then(() => {
             handleCancel();
           })
           .catch((error) => {
-            console.log(error);
             messageApi.error(error?.response?.data?.message, 5);
           });
       } else {
@@ -46,7 +47,6 @@ function FormContainer({
             handleCancel();
           })
           .catch((error) => {
-            console.log(error);
             messageApi.error(error?.response?.data?.message, 5);
           });
       }
@@ -126,8 +126,7 @@ function FormContainer({
 const mapDispatchToProps = (dispatch) => {
   return {
     inviteMember: (data) => dispatch(inviteMember(data)),
-    updateMember: (surveyProgramId, userId, data) =>
-      dispatch(updateMember(surveyProgramId, userId, data)),
+    updateMember: (id, data) => dispatch(updateMember(id, data)),
   };
 };
 

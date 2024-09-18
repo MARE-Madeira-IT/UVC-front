@@ -2,7 +2,10 @@ import { Input, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
-import { fetchUsers } from "../../../../../redux/redux-modules/user/actions";
+import {
+  fetchUsers,
+  removeUser,
+} from "../../../../../redux/redux-modules/user/actions";
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
@@ -17,8 +20,16 @@ const Container = styled.div`
   box-sizing: border-box;
 `;
 
-function Members({ data, loading, meta, fetchUsers, surveyProgramId, permissions }) {
-  const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
+function Members({
+  data,
+  loading,
+  meta,
+  fetchUsers,
+  surveyProgramId,
+  permissions,
+  removeUser,
+}) {
+  const [filters, setFilters] = useState({ survey_program: surveyProgramId });
   const [visible, setVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState();
 
@@ -64,6 +75,7 @@ function Members({ data, loading, meta, fetchUsers, surveyProgramId, permissions
           meta={meta}
           setVisible={setVisible}
           setCurrentUser={handleEdit}
+          handleDelete={removeUser}
         />
       </ContentContainer>
     </Container>
@@ -73,6 +85,7 @@ function Members({ data, loading, meta, fetchUsers, surveyProgramId, permissions
 const mapDispatchToProps = (dispatch) => {
   return {
     fetchUsers: (page, filters) => dispatch(fetchUsers(page, filters)),
+    removeUser: (id) => dispatch(removeUser(id)),
   };
 };
 

@@ -134,13 +134,13 @@ function SurveyProgram(props) {
               <div className="links-container">
                 <Link to={"/dashboard/surveyProgram/" + surveyProgram.id + "/reports"}>
                   <button>
-                    <p>Surveys</p>
+                    <p>Metadata</p>
                     <img src="/assets/icons/edit.svg" alt="" />
                   </button>
                 </Link>
                 <Link to={"/dashboard/surveyPrograms/" + surveyProgram.id}>
                   <button>
-                    <p>Metadata</p>
+                    <p>Survey Program</p>
                     <img src="/assets/icons/link.svg" alt="" />
                   </button>
                 </Link>

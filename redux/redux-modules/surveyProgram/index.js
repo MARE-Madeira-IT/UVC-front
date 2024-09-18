@@ -13,7 +13,6 @@ export default (state = initialState, action = {}) => {
   switch (action.type) {
     case `${types.FETCH_SELF_SURVEY_PROGRAMS}_PENDING`:
     case `${types.CREATE_SURVEY_PROGRAM}_PENDING`:
-    case `${types.INVITE_MEMBER}_PENDING`:
     case `${types.FETCH_SURVEY_PROGRAM_INVITES}_PENDING`:
     case `${types.FETCH_SURVEY_PROGRAM_STATISTICS}_PENDING`:
     case `${types.FETCH_SURVEY_PROGRAMS}_PENDING`:
@@ -25,7 +24,6 @@ export default (state = initialState, action = {}) => {
 
     case `${types.FETCH_SELF_SURVEY_PROGRAMS}_REJECTED`:
     case `${types.CREATE_SURVEY_PROGRAM}_REJECTED`:
-    case `${types.INVITE_MEMBER}_REJECTED`:
     case `${types.FETCH_SURVEY_PROGRAM_INVITES}_REJECTED`:
     case `${types.FETCH_SURVEY_PROGRAM_STATISTICS}_REJECTED`:
     case `${types.FETCH_SURVEY_PROGRAMS}_REJECTED`:
@@ -47,7 +45,7 @@ export default (state = initialState, action = {}) => {
       return {
         ...state,
         loading: false,
-        invites: action.payload.data,
+        invites: action.payload.data.data,
       };
 
     case `${types.FETCH_SURVEY_PROGRAM_STATISTICS}_FULFILLED`:
@@ -69,12 +67,6 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: [...state.data, action.payload.data.data],
-      };
-
-    case `${types.INVITE_MEMBER}_FULFILLED`:
-      return {
-        ...state,
-        loading: false,
       };
 
     default:

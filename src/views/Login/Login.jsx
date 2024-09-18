@@ -13,11 +13,10 @@ function Login(props) {
   const onFinish = (formFields) => {
     props
       .login(formFields)
-      .then((data) => {
+      .then(() => {
         navigate("/dashboard");
       })
       .catch((error) => {
-        console.log(error);
         messageApi.error(error?.response?.data?.message, 5);
       });
   };

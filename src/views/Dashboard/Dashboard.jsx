@@ -88,7 +88,8 @@ function Dashboard(props) {
           ? invites?.map((invite) => (
               <Notification key={invite.id}>
                 <p>
-                  You have been invited to the survey program {invite.surveyProgram.name}
+                  You have been invited to the survey program{" "}
+                  {invite?.surveyProgram?.name}
                 </p>
                 <p className="date">{invite.created_at}</p>
                 <div>

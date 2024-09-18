@@ -42,13 +42,7 @@ export const fetchSurveyProgramInvites = () => ({
   payload: axiosConfig.get(`/invites`),
 });
 
-export const inviteMember = (data) => ({
-  type: types.INVITE_MEMBER,
-  payload: axiosConfig.post(`/invite-member`, data),
-});
-
 export const respondToInvite = (id, data) => ({
   type: types.RESPOND_TO_INVITE,
   payload: axiosConfig.put(`/accept-member/${id}`, data),
 });
-

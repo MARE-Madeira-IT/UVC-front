@@ -23,7 +23,7 @@ const Container = styled.div`
 function Benthic(props) {
   const { data, loading, meta, surveyProgramId } = props;
 
-  const [filters, setFilters] = useState({ surveyProgram: surveyProgramId });
+  const [filters, setFilters] = useState({ survey_program: surveyProgramId });
   const [visible, setVisible] = useState(false);
   const [current, setCurrent] = useState();
 

@@ -167,7 +167,6 @@ function FormContainer(props) {
   //     //Reached bottom of page
   //     let benthics = form.getFieldsValue().benthics;
 
-  //     console.log(benthics);
   //     if (benthics?.length < 100) {
   //       let a = new Array(20)
   //         .fill(1)
