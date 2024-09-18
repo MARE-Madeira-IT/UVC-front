@@ -1,21 +1,17 @@
-import React, { useEffect, useState } from "react";
 import {
   Checkbox,
   Col,
   DatePicker,
   Form,
   Input,
-  InputNumber,
   Modal,
   Row,
   Select,
-  Space,
 } from "antd";
-import { fetchSelfProjects } from "../../../../../redux/redux-modules/project/actions";
-import styled from "styled-components";
 import { connect } from "react-redux";
-import { handleArrayToFormData, requiredRule } from "src/helper";
-import { title } from "process";
+import { requiredRule } from "src/helper";
+import styled from "styled-components";
+import { fetchSelfProjects } from "../../../../../redux/redux-modules/project/actions";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {

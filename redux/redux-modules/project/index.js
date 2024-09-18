@@ -69,7 +69,6 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: [...state.data, action.payload.data.data],
-        meta: { ...state.meta, total: state.meta.total + 1 },
       };
 
     case `${types.INVITE_MEMBER}_FULFILLED`:

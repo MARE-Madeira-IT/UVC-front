@@ -1,4 +1,4 @@
-import { Col, Form, Input, Modal, Row, Switch } from "antd";
+import { Col, Form, Input, message, Modal, Row, Switch } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -27,17 +27,28 @@ function FormContainer({
   users,
 }) {
   const [form] = Form.useForm();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const create = () => {
     form.validateFields().then((values) => {
       if (currentUser) {
-        updateMember(projectId, currentUser, values).then(() => {
-          handleCancel();
-        });
+        updateMember(projectId, currentUser, values)
+          .then(() => {
+            handleCancel();
+          })
+          .catch((error) => {
+            console.log(error);
+            messageApi.error(error?.response?.data?.message, 5);
+          });
       } else {
-        inviteMember({ ...values, project_id: projectId }).then(() => {
-          handleCancel();
-        });
+        inviteMember({ ...values, project_id: projectId })
+          .then(() => {
+            handleCancel();
+          })
+          .catch((error) => {
+            console.log(error);
+            messageApi.error(error?.response?.data?.message, 5);
+          });
       }
     });
   };
@@ -62,46 +73,53 @@ function FormContainer({
   }, [visible]);
 
   return (
-    <CustomModal
-      width={720}
-      title="Invite a member to the project"
-      open={visible}
-      onCancel={handleCancel}
-      centered
-      onOk={create}
-    >
-      <Form style={{ margin: "50px auto" }} layout="vertical" form={form}>
-        <Row gutter={32}>
-          <Col span={24}>
-            <Form.Item
-              label="Invite a member through the registration email"
-              name="email"
-              rules={[{ ...requiredRule, message: "'email' is required" }]}
-            >
-              <Input placeholder="example@underwater-survey.org" />
-            </Form.Item>
-            <h4>Permissions</h4>
-            <Row style={{ maxWidth: "250px" }}>
-              <Col span={8}>
-                <Form.Item name="show" label="Ver">
-                  <Switch defaultChecked={true} defaultValue={true} disabled />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="create" label="Create">
-                  <Switch />
-                </Form.Item>
-              </Col>
-              <Col span={8}>
-                <Form.Item name="edit" label="Edit">
-                  <Switch />
-                </Form.Item>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
-      </Form>
-    </CustomModal>
+    <>
+      {contextHolder}
+      <CustomModal
+        width={720}
+        title="Invite a member to the project"
+        open={visible}
+        onCancel={handleCancel}
+        centered
+        onOk={create}
+      >
+        <Form style={{ margin: "50px auto" }} layout="vertical" form={form}>
+          <Row gutter={32}>
+            <Col span={24}>
+              <Form.Item
+                label="Invite a member through the registration email"
+                name="email"
+                rules={[{ ...requiredRule, message: "'email' is required" }]}
+              >
+                <Input placeholder="example@underwater-survey.org" />
+              </Form.Item>
+              <h4>Permissions</h4>
+              <Row style={{ maxWidth: "250px" }}>
+                <Col span={8}>
+                  <Form.Item name="show" label="Ver">
+                    <Switch
+                      defaultChecked={true}
+                      defaultValue={true}
+                      disabled
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="create" label="Create">
+                    <Switch />
+                  </Form.Item>
+                </Col>
+                <Col span={8}>
+                  <Form.Item name="edit" label="Edit">
+                    <Switch />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Col>
+          </Row>
+        </Form>
+      </CustomModal>
+    </>
   );
 }
 

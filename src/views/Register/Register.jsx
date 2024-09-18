@@ -16,11 +16,11 @@ function Register(props) {
     props
       .createUser(formFields)
       .then((data) => {
-        message.success(data.value.data.message, 5);
+        messageApi.success(data.value.data.message, 5);
         navigate("/login");
       })
       .catch((error) => {
-        message.error(getErrorMessages(error.response.data.errors), 5);
+        messageApi.error(getErrorMessages(error.response.data.errors), 5);
       });
   };
 
