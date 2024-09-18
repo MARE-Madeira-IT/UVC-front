@@ -37,7 +37,7 @@ function FormContainer(props) {
     undefined, //"R" + replica
   ]);
 
-  const { current, visible, surveyProgramId } = props;
+  const { current, visible, surveyProgramId, reports } = props;
 
   const handleOk = () => {
     form.validateFields().then((values) => {
@@ -56,8 +56,8 @@ function FormContainer(props) {
         functions: initFunctions,
       };
 
-      if (current.id) {
-        props.update(current.id, formData).then(() => {
+      if (current) {
+        props.update(current, formData).then(() => {
           handleCancel();
         });
       } else {
@@ -90,38 +90,39 @@ function FormContainer(props) {
   }, [sample]);
 
   useEffect(() => {
-    if (current.id) {
+    if (current) {
+      let currentReport = reports.find((el) => el.id === current);
       let initFunctions = {};
-      current.functions.map((f) => {
+      currentReport.functions.map((f) => {
         initFunctions["function_" + f.name] = f.pivot.user;
       });
 
       form.setFieldsValue({
-        date: moment(current.date),
-        code: current.code,
-        site: [current.site.locality.id, current.site.id],
-        depth_id: current.depth.id,
-        heading: current.heading,
-        heading_direction: current.heading_direction,
-        site_area: current.site_area,
-        distance: current.distance,
-        daily_dive: current.daily_dive,
-        transect: current.transect,
-        time: current.time,
-        replica: current.replica,
-        surveyed_area: current.surveyed_area,
-        n: current.n,
+        date: moment(currentReport.date),
+        code: currentReport.code,
+        site: [currentReport.site.locality.id, currentReport.site.id],
+        depth_id: currentReport.depth.id,
+        heading: currentReport.heading,
+        heading_direction: currentReport.heading_direction,
+        site_area: currentReport.site_area,
+        distance: currentReport.distance,
+        daily_dive: currentReport.daily_dive,
+        transect: currentReport.transect,
+        time: currentReport.time,
+        replica: currentReport.replica,
+        surveyed_area: currentReport.surveyed_area,
+        n: currentReport.n,
 
         ...initFunctions,
       });
 
       setSample([
-        current.site.locality.code,
-        current.site.code,
-        current.site_area,
-        "Time" + current.time, //"Time" + time
-        "D" + current.depth.id, //"D" + depth.id
-        "D" + current.replica, //"R" + replica
+        currentReport.site.locality.code,
+        currentReport.site.code,
+        currentReport.site_area,
+        "Time" + currentReport.time, //"Time" + time
+        "D" + currentReport.depth.id, //"D" + depth.id
+        "D" + currentReport.replica, //"R" + replica
       ]);
     }
   }, [visible]);
@@ -296,6 +297,7 @@ const mapStateToProps = (state) => {
     loading: state.report.loading,
     localities: state.locality.selector,
     depths: state.depth.selector,
+    reports: state.report.data,
     functions: state._function.selector,
   };
 };

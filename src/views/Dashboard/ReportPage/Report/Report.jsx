@@ -28,7 +28,7 @@ function Report(props) {
   const { data, loading, meta, surveyProgramId, permissions } = props;
   const [filters, setFilters] = useState({ survey_program: surveyProgramId });
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState({});
+  const [current, setCurrent] = useState();
 
   useEffect(() => {
     props.fetchReports(1, filters);
@@ -40,7 +40,7 @@ function Report(props) {
   }
 
   const handleCancel = () => {
-    setCurrent({});
+    setCurrent();
     setVisible(false);
   };
 

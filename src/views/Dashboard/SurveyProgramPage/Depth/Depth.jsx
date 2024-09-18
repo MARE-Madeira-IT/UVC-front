@@ -27,7 +27,7 @@ function Depth(props) {
 
   const [filters, setFilters] = useState({ survey_program: surveyProgramId });
   const [visible, setVisible] = useState(false);
-  const [current, setCurrent] = useState({});
+  const [current, setCurrent] = useState();
 
   useEffect(() => {
     props.fetchDepths(1, filters);
@@ -38,7 +38,7 @@ function Depth(props) {
   }
 
   const handleCancel = () => {
-    setCurrent({});
+    setCurrent();
     setVisible(false);
   };
 

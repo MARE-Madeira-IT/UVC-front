@@ -17,20 +17,22 @@ const requiredRule = { required: true };
 
 function FormContainer(props) {
   const [form] = Form.useForm();
-  const { current, visible, surveyProgramId } = props;
+  const { current, visible, surveyProgramId, functions } = props;
 
   const handleOk = () => {
     form.validateFields().then((values) => {
-      if (current.id) {
+      if (current) {
         props
-          .update(current.id, { ...values, survey_program_id: surveyProgramId })
+          .update(current, { ...values, survey_program_id: surveyProgramId })
           .then(() => {
             handleCancel();
           });
       } else {
-        props.create({ ...values, survey_program_id: surveyProgramId }).then(() => {
-          handleCancel();
-        });
+        props
+          .create({ ...values, survey_program_id: surveyProgramId })
+          .then(() => {
+            handleCancel();
+          });
       }
     });
   };
@@ -41,9 +43,10 @@ function FormContainer(props) {
   };
 
   useEffect(() => {
-    if (current.id) {
+    if (current) {
+      let currentFunction = functions.find((el) => el.id === current);
       form.setFieldsValue({
-        name: current.name,
+        name: currentFunction.name,
       });
     }
   }, [visible]);
@@ -82,6 +85,7 @@ function FormContainer(props) {
 const mapStateToProps = (state) => {
   return {
     loading: state._function.loading,
+    functions: state._function.data,
   };
 };
 
