@@ -11,6 +11,7 @@ import {
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
+import { useEffect } from "react";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -24,11 +25,32 @@ const CustomModal = styled(Modal)`
 
 function FormContainer(props) {
   const [form] = Form.useForm();
-  const { visible } = props;
+  const { visible, current, workspaces } = props;
+
+  useEffect(() => {
+    if (current) {
+      let currentWorkspace = workspaces.find((el) => el.id === current);
+
+      form.setFieldsValue({
+        name: currentWorkspace.name,
+        description: currentWorkspace.description,
+        geographic_area: currentWorkspace.geographic_area,
+        stage: currentWorkspace.stage,
+        community_size: currentWorkspace.community_size,
+        start_period: currentWorkspace.start_period,
+        end_period: currentWorkspace.end_period,
+        public: currentWorkspace.public,
+      });
+    }
+  }, [visible]);
 
   const handleOk = () => {
     form.validateFields().then((values) => {
-      props.create(values);
+      if (current) {
+        props.update(current, values);
+      } else {
+        props.create(values);
+      }
     });
   };
 
@@ -189,6 +211,7 @@ function FormContainer(props) {
 const mapStateToProps = (state) => {
   return {
     loading: state.surveyProgram.loading,
+    workspaces: state.surveyProgram.selfData,
   };
 };
 

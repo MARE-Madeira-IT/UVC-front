@@ -2,7 +2,6 @@ import { Col, message, Row } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import { fetchPermissions } from "../../../../redux/redux-modules/permissions/actions";
 import Depth from "./Depth/Depth";
@@ -13,6 +12,7 @@ import Members from "./Members/Members";
 import Statistics from "./Statistics";
 import Taxa from "./Taxa/Taxa";
 import TaxaCategory from "./TaxaCategory/TaxaCategory";
+import axiosConfig from "src/axiosConfig";
 
 const Container = styled.section`
   width: 100%;

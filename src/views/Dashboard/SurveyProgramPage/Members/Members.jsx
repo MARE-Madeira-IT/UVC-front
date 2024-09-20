@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import {
-  fetchUsers,
-  removeUser,
-} from "../../../../../redux/redux-modules/user/actions";
+  fetchSurveyProgramUsers,
+  removeSurveyProgramUser,
+} from "../../../../../redux/redux-modules/surveyProgramUser/actions";
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
@@ -84,16 +84,16 @@ function Members({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchUsers: (page, filters) => dispatch(fetchUsers(page, filters)),
-    removeUser: (id) => dispatch(removeUser(id)),
+    fetchUsers: (page, filters) => dispatch(fetchSurveyProgramUsers(page, filters)),
+    removeUser: (id) => dispatch(removeSurveyProgramUser(id)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.user.loading,
-    data: state.user.data,
-    meta: state.user.meta,
+    loading: state.surveyProgramUser.loading,
+    data: state.surveyProgramUser.data,
+    meta: state.surveyProgramUser.meta,
     permissions: state.permissions.data,
   };
 };

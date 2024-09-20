@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import {
-  updateMember,
-  inviteMember,
-} from "../../../../../redux/redux-modules/user/actions";
+  updateSurveyProgramMember,
+  inviteSurveyProgramMember,
+} from "../../../../../redux/redux-modules/surveyProgramUser/actions";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -125,15 +125,15 @@ function FormContainer({
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    inviteMember: (data) => dispatch(inviteMember(data)),
-    updateMember: (id, data) => dispatch(updateMember(id, data)),
+    inviteMember: (data) => dispatch(inviteSurveyProgramMember(data)),
+    updateMember: (id, data) => dispatch(updateSurveyProgramMember(id, data)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
     loading: state.surveyProgram.loading,
-    users: state.user.data,
+    users: state.surveyProgramUser.data,
   };
 };
 

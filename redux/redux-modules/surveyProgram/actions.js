@@ -39,10 +39,10 @@ export const deleteSurveyProgram = (id) => ({
 
 export const fetchSurveyProgramInvites = () => ({
   type: types.FETCH_SURVEY_PROGRAM_INVITES,
-  payload: axiosConfig.get(`/invites`),
+  payload: axiosConfig.get(`/surveyProgramUsers/invites`),
 });
 
 export const respondToInvite = (id, data) => ({
   type: types.RESPOND_TO_INVITE,
-  payload: axiosConfig.put(`/accept-member/${id}`, data),
+  payload: axiosConfig.put(`/surveyProgramUsers/${id}/accept`, data),
 });

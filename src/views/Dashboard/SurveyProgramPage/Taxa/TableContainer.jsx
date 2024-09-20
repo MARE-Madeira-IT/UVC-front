@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from "react";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Flex,
-  Image,
-  Popconfirm,
-  Popover,
-  Tag,
-} from "antd";
-import styled from "styled-components";
-import TableComponent from "../../Common/TableComponent";
-import RowOperation from "../../Common/RowOperation";
 import {
   CheckOutlined,
   CloseOutlined,
   UploadOutlined,
 } from "@ant-design/icons";
+import { Badge, Button, Flex, Image, Popover } from "antd";
+import { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import styled from "styled-components";
 import {
   fetchTaxas,
   updateValidation,
 } from "../../../../../redux/redux-modules/taxa/actions";
-import { connect } from "react-redux";
+import RowOperation from "../../Common/RowOperation";
+import TableComponent from "../../Common/TableComponent";
 import AddImageToNewTaxaModal from "./AddImageToNewTaxaModal";
 
 const Container = styled.div`
@@ -143,9 +134,7 @@ function TableContainer({
                   <Button
                     loading={loading}
                     onClick={() =>
-                      props
-                        .updateValidation(rest.id, { validated: !validated })
-                        .then(() => props.fetchTaxas())
+                      props.updateValidation(rest.id, { validated: !validated })
                     }
                     className={
                       validated ? "validate-validated" : "validate-unvalidated"

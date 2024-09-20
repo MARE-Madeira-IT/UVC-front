@@ -1,13 +1,13 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import {
-  fetchSurveyProgramInvites,
   fetchSelfSurveyPrograms,
+  fetchSurveyProgramInvites,
   respondToInvite,
 } from "../../../redux/redux-modules/surveyProgram/actions";
-import SurveyProgram from "./SurveyProgramPage/SurveyProgram/SurveyProgram";
+import Workspace from "./Workspace/Workspace";
+import axiosConfig from "src/axiosConfig";
 
 const Container = styled.section`
   width: 100%;
@@ -102,7 +102,8 @@ function Dashboard(props) {
             ))
           : "You don't have any notifications right now."}
       </UserDataContainer>
-      <SurveyProgram />
+      <Workspace />
+      {/* <SurveyProgram /> */}
     </Container>
   );
 }

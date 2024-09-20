@@ -50,7 +50,7 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: [...state.data, action.payload.data.data],
-        meta: { ...state.meta, total: state.meta.total + 1 },
+        meta: !state.meta?.total ? {} : { ...state.meta, total: state.meta.total + 1 },
       };
 
     case `${types.DELETE_CATEGORY}_FULFILLED`:

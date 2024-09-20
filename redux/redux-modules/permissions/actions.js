@@ -3,5 +3,5 @@ import axiosConfig from "../../../src/axiosConfig";
 
 export const fetchPermissions = (surveyProgram) => ({
   type: types.FETCH_PERMISSIONS,
-  payload: axiosConfig.get(`/permissions/${surveyProgram}`),
+  payload: axiosConfig.get(`/surveyPrograms/${surveyProgram}/permissions`),
 });

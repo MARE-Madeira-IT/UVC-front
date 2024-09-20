@@ -4,7 +4,7 @@ import contact from "./redux-modules/contact";
 import surveyProgram from "./redux-modules/surveyProgram";
 import report from "./redux-modules/report";
 import locality from "./redux-modules/locality";
-import user from "./redux-modules/user";
+import surveyProgramUser from "./redux-modules/surveyProgramUser";
 import taxa from "./redux-modules/taxa";
 import indicator from "./redux-modules/indicator";
 import taxa_category from "./redux-modules/taxa_category";
@@ -15,14 +15,22 @@ import substrate from "./redux-modules/substrate";
 import motile from "./redux-modules/motile";
 import size_category from "./redux-modules/size_category";
 import permissions from "./redux-modules/permissions";
+import projectUser from "./redux-modules/projectUser";
+import workspaceUser from "./redux-modules/workspaceUser";
+import workspace from "./redux-modules/workspace";
+import project from "./redux-modules/project";
 
 const rootReducer = combineReducers({
   auth,
   contact,
   surveyProgram,
+  project,
+  workspace,
   report,
   locality,
-  user,
+  surveyProgramUser,
+  projectUser,
+  workspaceUser,
   taxa,
   indicator,
   taxa_category,
@@ -32,7 +40,7 @@ const rootReducer = combineReducers({
   substrate,
   motile,
   size_category,
-  permissions
+  permissions,
 });
 
 export default rootReducer;

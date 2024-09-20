@@ -2,13 +2,13 @@ import { Col, message, Row } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import { fetchPermissions } from "../../../../redux/redux-modules/permissions/actions";
 import Benthic from "./Benthic/Benthic";
 import Motile from "./Motile/Motile";
 import Report from "./Report/Report";
 import ReportMap from "./ReportMap";
+import axiosConfig from "src/axiosConfig";
 
 const Container = styled.div`
   width: 100%;

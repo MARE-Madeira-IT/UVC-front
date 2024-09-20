@@ -10,11 +10,12 @@ import Register from "./views/Register/Register";
 import SurveyProgramPage from "./views/Dashboard/SurveyProgramPage/SurveyProgramPage";
 import ReportPage from "./views/Dashboard/ReportPage/ReportPage";
 import "mapbox-gl/dist/mapbox-gl.css";
-import SurveyProgramList from "./views/Dashboard/SurveyProgramList/SurveyProgramList";
+import ProjectList from "./views/Dashboard/ProjectListPage/ProjectList";
 import { useEffect } from "react";
 import axiosConfig from "./axiosConfig";
 import { connect } from "react-redux";
 import { logout } from "../redux/redux-modules/auth/actions";
+import ProjectPage from "./views/Dashboard/ProjectPage/ProjectPage";
 
 function App(props) {
   useEffect(() => {
@@ -55,6 +56,14 @@ function App(props) {
               }
             />
             <Route
+              path="/dashboard/projects"
+              element={
+                <PrivateRoute>
+                  <ProjectPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/dashboard/surveyPrograms/:id"
               element={
                 <PrivateRoute>
@@ -72,10 +81,10 @@ function App(props) {
               }
             />
             <Route
-              path="/dashboard/surveyPrograms"
+              path="/projects"
               element={
                 <PrivateRoute>
-                  <SurveyProgramList />
+                  <ProjectList />
                 </PrivateRoute>
               }
             />

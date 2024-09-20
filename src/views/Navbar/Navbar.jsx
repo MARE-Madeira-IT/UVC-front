@@ -20,7 +20,7 @@ const authNavigation = [
 ];
 
 const dashboardNavigation = [
-    { name: "Survey Programs", link: "/dashboard/surveyPrograms" },
+    { name: "Projects", link: "/projects" },
 ];
 
 const Navbar = (props) => {
