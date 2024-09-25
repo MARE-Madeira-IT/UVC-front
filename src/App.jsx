@@ -16,6 +16,7 @@ import axiosConfig from "./axiosConfig";
 import { connect } from "react-redux";
 import { logout } from "../redux/redux-modules/auth/actions";
 import ProjectPage from "./views/Dashboard/ProjectPage/ProjectPage";
+import SurveyProgram from "./views/Dashboard/SurveyProgramPage/SurveyProgram/SurveyProgram";
 
 function App(props) {
   useEffect(() => {
@@ -60,6 +61,14 @@ function App(props) {
               element={
                 <PrivateRoute>
                   <ProjectPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard/surveyPrograms"
+              element={
+                <PrivateRoute>
+                  <SurveyProgram />
                 </PrivateRoute>
               }
             />

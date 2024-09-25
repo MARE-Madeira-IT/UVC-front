@@ -57,13 +57,14 @@ function ListComponent({
   bordered = false,
   handleShowSizeChange,
   Component,
+  showPaginationTotal,
 }) {
   useEffect(() => {
     //This makes the table is on a page with no data after deleting the only row
     if (
       meta?.total &&
       meta?.current_page > 1 &&
-      meta?.current_page > Math.ceil(meta.total / 10)
+      meta?.current_page > Math.ceil(meta.total / meta.per_page)
     ) {
       handlePageChange(meta.current_page - 1);
     }
@@ -84,10 +85,14 @@ function ListComponent({
                 onShowSizeChange: handleShowSizeChange,
                 total: meta.total,
                 onChange: (e) => handlePageChange(e),
-                showTotal: (total, range) =>
-                  `${range[0]}-${range[1]} of ${total} records`,
+                showTotal:
+                  showPaginationTotal != null
+                    ? showPaginationTotal
+                    : (total, range) =>
+                        `${range[0]}-${range[1]} of ${total} records`,
                 current: meta.current_page,
                 pageSize: meta.per_page,
+                size: "small",
               }
             : false
         }

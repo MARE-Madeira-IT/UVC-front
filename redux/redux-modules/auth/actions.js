@@ -46,3 +46,26 @@ export const updateProfilePicture = (id, data) => ({
   payload: api.updateProfilePicture(id, data),
   meta: { globalError: true },
 });
+
+export const fetchAllInvites = (page = 1) => ({
+  type: types.FETCH_INVITES,
+  payload: axiosConfig.get(`/invites?page=${page}`),
+});
+
+export const acceptInvite = (id, type, data) => {
+  let url = "";
+
+  if (type === "project") {
+    url = `/projectUsers/${id}/accept`;
+  } else if (type === "workspace") {
+    url = `/workspaceUsers/${id}/accept`;
+  } else {
+    url = `/surveyProgramUsers/${id}/accept`;
+  }
+
+  return {
+    type: types.ACCEPT_INVITE,
+    payload: axiosConfig.put(url, data),
+    meta: { id, type },
+  };
+};

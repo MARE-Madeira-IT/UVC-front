@@ -2,12 +2,12 @@ import { types } from "./types";
 import axiosConfig from "../../../src/axiosConfig";
 import queryString from "query-string";
 
-export const fetchSelfProjects = (filters) => ({
+export const fetchSelfProjects = (page = 1, filters) => ({
   type: types.FETCH_SELF_PROJECTS,
   payload: axiosConfig.get(
     `/self-projects?${queryString.stringify(filters, {
       arrayFormat: "index",
-    })}`
+    })}&page=${page}`
   ),
 });
 
@@ -25,23 +25,23 @@ export const createProject = (data) => ({
   payload: axiosConfig.post(`/projects`, data),
 });
 
-export const updateSurveyProgram = (id, data) => ({
+export const updateProject = (id, data) => ({
   type: types.UPDATE_PROJECT,
   payload: axiosConfig.put(`/projects/${id}`, data),
 });
 
-export const deleteSurveyProgram = (id) => ({
+export const deleteProject = (id) => ({
   type: types.DELETE_PROJECT,
   payload: axiosConfig.delete(`/projects/${id}`),
   meta: { id },
 });
 
-export const fetchSurveyProgramInvites = () => ({
-  type: types.FETCH_PROJECT_INVITES,
-  payload: axiosConfig.get(`/projectUsers/invites`),
+export const handleProjectUsers = (id, data) => ({
+  type: types.UPDATE_PROJECT_USERS,
+  payload: axiosConfig.put(`/projects/${id}/users`, data),
 });
 
-export const respondToProjectInvite = (id, data) => ({
-  type: types.RESPOND_TO_INVITE_PROJECT,
-  payload: axiosConfig.put(`/projectUsers/${id}/accept`, data),
+export const setCurrentProject = (project) => ({
+  type: types.SET_CURRENT_PROJECT,
+  payload: project,
 });

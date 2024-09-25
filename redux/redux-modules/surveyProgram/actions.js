@@ -2,9 +2,11 @@ import { types } from "./types";
 import axiosConfig from "../../../src/axiosConfig";
 import queryString from "query-string";
 
-export const fetchSelfSurveyPrograms = () => ({
+export const fetchSelfSurveyPrograms = (page, filters) => ({
   type: types.FETCH_SELF_SURVEY_PROGRAMS,
-  payload: axiosConfig.get(`/self-survey-programs`),
+  payload: axiosConfig.get(`/self-survey-programs?${queryString.stringify(filters, {
+    arrayFormat: "index",
+  })}&page=${page}`),
 });
 
 export const fetchSurveyProgramStatistics = (id) => ({
@@ -37,12 +39,7 @@ export const deleteSurveyProgram = (id) => ({
   meta: { id },
 });
 
-export const fetchSurveyProgramInvites = () => ({
-  type: types.FETCH_SURVEY_PROGRAM_INVITES,
-  payload: axiosConfig.get(`/surveyProgramUsers/invites`),
-});
-
-export const respondToInvite = (id, data) => ({
-  type: types.RESPOND_TO_INVITE,
-  payload: axiosConfig.put(`/surveyProgramUsers/${id}/accept`, data),
+export const handleSurveyProgramUsers = (id, data) => ({
+  type: types.UPDATE_SURVEY_PROGRAM_USERS,
+  payload: axiosConfig.put(`/surveyPrograms/${id}/users`, data),
 });

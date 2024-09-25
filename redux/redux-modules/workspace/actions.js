@@ -45,17 +45,12 @@ export const deleteWorkspace = (id) => ({
   meta: { id },
 });
 
-export const fetchWorkspaceInvites = () => ({
-  type: types.FETCH_WORKSPACE_INVITES,
-  payload: axiosConfig.get(`/workspaceUsers/invites`),
-});
-
-export const respondToWorkspaceInvite = (id, data) => ({
-  type: types.RESPOND_TO_INVITE_WORKSPACE,
-  payload: axiosConfig.put(`/workspaceUsers/${id}/accept`, data),
-});
-
 export const setCurrentWorkspace = (workspace) => ({
-  type: types.SET_CURRENT,
+  type: types.SET_CURRENT_WORKSPACE,
   payload: workspace,
+});
+
+export const handleWorkspaceUsers = (id, data) => ({
+  type: types.UPDATE_WORKSPACE_USERS,
+  payload: axiosConfig.put(`/workspaces/${id}/users`, data),
 });

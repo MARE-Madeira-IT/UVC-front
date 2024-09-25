@@ -1,14 +1,23 @@
-import { EditFilled } from "@ant-design/icons";
-import { Empty, Select } from "antd";
+import { EditFilled, UserOutlined, DeleteFilled } from "@ant-design/icons";
+import { Empty, Input, Popconfirm, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
-import styled from "styled-components";
-import { fetchSelfProjects } from "../../../../redux/redux-modules/project/actions";
-import { fetchSurveyProgramInvites } from "../../../../redux/redux-modules/surveyProgram/actions";
-import FormContainer from "./FormContainer";
-import { fetchWorkspacesSelector } from "../../../../redux/redux-modules/workspace/actions";
 import axiosConfig from "src/axiosConfig";
+import styled from "styled-components";
+import {
+  createProject,
+  deleteProject,
+  fetchSelfProjects,
+  handleProjectUsers,
+  setCurrentProject,
+  updateProject,
+} from "../../../../redux/redux-modules/project/actions";
+import MembersFormContainer from "../Common/MembersFormContainer";
+import FormContainer from "./FormContainer";
+import ListContainer from "./ListContainer";
+import { setCurrentWorkspace } from "../../../../redux/redux-modules/workspace/actions";
+import TitleAddSection from "../Common/TitleAddSection";
 
 const Container = styled.section`
   width: 100%;
@@ -17,7 +26,7 @@ const Container = styled.section`
   box-sizing: border-box;
 `;
 
-const ListContainer = styled.section`
+const ListSection = styled.section`
   width: 100%;
   box-sizing: border-box;
 `;
@@ -58,54 +67,66 @@ const ProjectContainer = styled.div`
     }
   }
 
+  .links-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+
+    button {
+      cursor: pointer;
+      background-color: #0c4c88;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 0px;
+      box-shadow: 0px;
+      display: flex;
+      gap: 15px;
+      color: white;
+      flex-direction: row;
+      align-items: center;
+
+      p {
+        margin: 0;
+      }
+
+      img {
+        width: 12px;
+      }
+
+      svg {
+        color: white;
+      }
+    }
+  }
+
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    .links-container {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 5px;
-
-      button {
-        cursor: pointer;
-        background-color: #0c4c88;
-        padding: 8px;
-        box-sizing: border-box;
-        border: 0px;
-        box-shadow: 0px;
-        display: flex;
-        gap: 15px;
-        color: white;
-        flex-direction: row;
-        align-items: center;
-
-        p {
-          margin: 0;
-        }
-
-        img {
-          width: 12px;
-        }
-
-        svg {
-          color: white;
-        }
-      }
-    }
   }
 `;
 
 function ProjectPage(props) {
   const [searchParams] = useSearchParams();
 
-  const { data, currentWorkspace } = props;
+  const { data, currentWorkspace, meta, loading, workspaces } = props;
 
   const [current, setCurrent] = useState();
   const [visible, setVisible] = useState(false);
+  const [filters, setFilters] = useState({
+    workspace: [parseInt(searchParams.get("workspace_id"))],
+  });
+  const [membersVisible, setMembersVisible] = useState(false);
 
+  useEffect(() => {
+    props.fetchSelfProjects(1, filters);
+  }, [filters]);
+
+  const handleMembers = (aCurrent) => {
+    setCurrent(aCurrent);
+    setMembersVisible(true);
+  };
   const handleEdit = (aCurrent) => {
     setCurrent(aCurrent);
     setVisible(true);
@@ -113,87 +134,165 @@ function ProjectPage(props) {
 
   const handleCancel = () => {
     setVisible(false);
+    setMembersVisible(false);
     setCurrent();
   };
 
   useEffect(() => {
     let workspaceId = parseInt(searchParams.get("workspace_id"));
-    props.fetchSelfProjects({
-      workspace: [parseInt(searchParams.get("workspace_id"))],
-    });
+    props.fetchSelfProjects(null, filters);
     axiosConfig.defaults.headers.common["workspace"] = workspaceId;
+
+    if (!currentWorkspace) {
+      props.setCurrentWorkspace(
+        workspaces?.find((el) => el.id === workspaceId)
+      );
+    }
   }, []);
+
+  function handlePageChange(page) {
+    props.fetchSelfProjects(page, filters);
+  }
 
   return (
     <Container>
+      <MembersFormContainer
+        current={current}
+        visible={membersVisible}
+        data={data}
+        handleCancel={handleCancel}
+        handleUsers={props.handleUsers}
+      />
+
       <FormContainer
         current={current}
         visible={visible}
         handleCancel={handleCancel}
-        create={props.createWorkspace}
-        update={props.updateWorkspace}
+        create={props.createProject}
+        update={props.updateProject}
       />
-      <ListContainer>
+      <ListSection>
         <h1 style={{ fontSize: "1.725rem", textDecoration: "underline" }}>
           {currentWorkspace?.name}
         </h1>
-        <h2>Project(s)</h2>
+        <TitleAddSection
+          forceShow
+          title="Project(s)"
+          handleClick={() => setVisible(true)}
+        />
+        <Row style={{ marginBottom: "20px" }}>
+          <Input.Search
+            onSearch={(e) => setFilters({ ...filters, search: e })}
+            size="large"
+            type="search"
+            placeholder="Search"
+          />
+        </Row>
 
         {data?.length === 0 ? (
           <Empty />
         ) : (
-          data?.map((project, i) => (
-            <ProjectContainer key={i}>
-              <div className="header">
-                <h3>{project.name}</h3>
+          <ListContainer
+            handlePageChange={handlePageChange}
+            data={data}
+            loading={loading}
+            meta={meta}
+            Component={(item) => {
+              return (
+                <ProjectContainer key={item.id}>
+                  <div className="header">
+                    <h3>{item.name}</h3>
 
-                <div className="links-container">
-                  <Link
-                    to={"/dashboard/surveyPrograms?project_id=" + project.id}
-                  >
-                    <button>
-                      <p>Projects</p>
-                      <img src="/assets/icons/link.svg" alt="" />
-                    </button>
-                  </Link>
-                  <button onClick={() => handleEdit(project.id)}>
-                    <p>Edit</p>
-                    <EditFilled />
-                  </button>
-                </div>
-              </div>
-              <p>{project.description}</p>
-
-              <div className="team">
-                {project.users.map((member) => (
-                  <div key={member.id} className="team-member">
-                    <img
-                      src={"https://wave-labs.org/" + member.photo}
-                      alt="profile picture"
-                    />
-                    <div className="details">
-                      <p className="name">{member.userable.user.name}</p>
-                      {/* <p className='role'>{member.role}</p> */}
+                    <div className="links-container">
+                      <Link
+                        onClick={() => {
+                          props.setCurrentProject(item);
+                        }}
+                        to={`/dashboard/surveyPrograms?workspace_id=${currentWorkspace.id}&project_id=${item.id}`}
+                      >
+                        <button>
+                          <p>Survey Programs</p>
+                          <img src="/assets/icons/link.svg" alt="" />
+                        </button>
+                      </Link>
                     </div>
                   </div>
-                ))}
-              </div>
-            </ProjectContainer>
-          ))
+                  <p>{item.description}</p>
+                  <Row justify="space-between" align="bottom">
+                    <div className="team">
+                      {item.users.map((member) => (
+                        <div key={member.id} className="team-member">
+                          <img
+                            src={"https://wave-labs.org/" + member.photo}
+                            alt="profile picture"
+                          />
+                          <div className="details">
+                            <p className="name">{member.userable.user.name}</p>
+                            {/* <p className='role'>{member.role}</p> */}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <Row>
+                      <div className="links-container">
+                        {item?.permissions?.includes("edit") && (
+                          <button onClick={() => handleMembers(item.id)}>
+                            <p>Members</p>
+                            <UserOutlined />
+                          </button>
+                        )}
+                        {item?.permissions?.includes("edit") && (
+                          <button onClick={() => handleEdit(item.id)}>
+                            <p>Edit</p>
+                            <EditFilled />
+                          </button>
+                        )}
+
+                        {item?.permissions?.includes("edit") && (
+                          <Popconfirm
+                            title="Do you want to delete?"
+                            okText="Yes"
+                            cancelText="No"
+                            onConfirm={() => props.deleteProject(item.id)}
+                          >
+                            <button style={{ backgroundColor: "#f34747" }}>
+                              Delete
+                              <DeleteFilled />
+                            </button>
+                          </Popconfirm>
+                        )}
+                      </div>
+                    </Row>
+                  </Row>
+                </ProjectContainer>
+              );
+            }}
+          />
         )}
-      </ListContainer>
+      </ListSection>
     </Container>
   );
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSelfProjects: (filters) => dispatch(fetchSelfProjects(filters)),
+    fetchSelfProjects: (page, filters) =>
+      dispatch(fetchSelfProjects(page, filters)),
+    updateProject: (id, data) => dispatch(updateProject(id, data)),
+    createProject: (data) => dispatch(createProject(data)),
+    deleteProject: (data) => dispatch(deleteProject(data)),
+    handleUsers: (id, data) => dispatch(handleProjectUsers(id, data)),
+    setCurrentWorkspace: (workspace) =>
+      dispatch(setCurrentWorkspace(workspace)),
+    setCurrentProject: (workspace) => dispatch(setCurrentProject(workspace)),
   };
 };
 
 const mapStateToProps = (state) => {
   return {
     data: state.project.selfData,
+    workspaces: state.workspace.selfData,
+    meta: state.project.selfMeta,
+    loading: state.project.loading,
     currentWorkspace: state.workspace.current,
   };
 };

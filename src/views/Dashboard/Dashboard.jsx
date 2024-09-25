@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
+import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import {
-  fetchSelfSurveyPrograms,
-  fetchSurveyProgramInvites,
-  respondToInvite,
-} from "../../../redux/redux-modules/surveyProgram/actions";
+  acceptInvite,
+  fetchAllInvites,
+} from "../../../redux/redux-modules/auth/actions";
+import { fetchSelfWorkspaces } from "../../../redux/redux-modules/workspace/actions";
+import ListContainer from "./ListContainer";
 import Workspace from "./Workspace/Workspace";
-import axiosConfig from "src/axiosConfig";
+import { Empty } from "antd";
 
 const Container = styled.section`
   width: 100%;
@@ -59,18 +61,36 @@ const Notification = styled.div`
 `;
 
 function Dashboard(props) {
-  const { user, invites } = props;
+  const { user, invites, invitesMeta, loading } = props;
 
   useEffect(() => {
     axiosConfig.defaults.headers.common["survey_program"] = null;
-    props.fetchSurveyProgramInvites();
+    props.fetchAllInvites();
   }, []);
 
-  const handleInvite = (id, status) => {
-    props.respondToInvite(id, { status: status }).then(() => {
-      props.fetchSelfSurveyPrograms();
+  const handleInvite = (id, type, status) => {
+    props.acceptInvite(id, type, { status: status }).then(() => {
+      props.fetchSelfWorkspaces();
     });
   };
+
+  function handlePageChange(page) {
+    props.fetchAllInvites(page);
+  }
+
+  function makeMessage(item) {
+    if (item.type === "surveyProgram") {
+      return `You have been invited to the survey program ${item?.name}`;
+    }
+
+    if (item.type === "project") {
+      return `You have been invited to the project ${item?.name}`;
+    }
+
+    if (item.type === "workspace") {
+      return `You have been invited to the workspace ${item?.name}`;
+    }
+  }
 
   return (
     <Container>
@@ -84,23 +104,33 @@ function Dashboard(props) {
         <p>{user.email}</p>
         <br />
         <h3>Notification(s)</h3>
-        {invites?.length > 0
-          ? invites?.map((invite) => (
-              <Notification key={invite.id}>
-                <p>
-                  You have been invited to the survey program{" "}
-                  {invite?.surveyProgram?.name}
-                </p>
-                <p className="date">{invite.created_at}</p>
-                <div>
-                  <span onClick={() => handleInvite(invite.id, 1)}>Accept</span>
-                  <span onClick={() => handleInvite(invite.id, 2)}>
-                    Decline
-                  </span>
-                </div>
-              </Notification>
-            ))
-          : "You don't have any notifications right now."}
+
+        {invites?.length > 0 ? (
+          <ListContainer
+            handlePageChange={handlePageChange}
+            data={invites}
+            loading={loading}
+            meta={invitesMeta}
+            Component={(item) => {
+              return (
+                <Notification key={item.id}>
+                  <p>{makeMessage(item)}</p>
+                  <p className="date">{item.created_at}</p>
+                  <div>
+                    <span onClick={() => handleInvite(item.id, item.type, 1)}>
+                      Accept
+                    </span>
+                    <span onClick={() => handleInvite(item.id, item.type, 2)}>
+                      Decline
+                    </span>
+                  </div>
+                </Notification>
+              );
+            }}
+          />
+        ) : (
+          <Empty description="You don't have any notifications right now." imageStyle={{maxHeight: '60px'}} />
+        )}
       </UserDataContainer>
       <Workspace />
       {/* <SurveyProgram /> */}
@@ -109,9 +139,9 @@ function Dashboard(props) {
 }
 const mapDispatchToProps = (dispatch) => {
   return {
-    fetchSelfSurveyPrograms: () => dispatch(fetchSelfSurveyPrograms()),
-    fetchSurveyProgramInvites: () => dispatch(fetchSurveyProgramInvites()),
-    respondToInvite: (id, data) => dispatch(respondToInvite(id, data)),
+    fetchSelfWorkspaces: () => dispatch(fetchSelfWorkspaces()),
+    fetchAllInvites: (page) => dispatch(fetchAllInvites(page)),
+    acceptInvite: (id, type, data) => dispatch(acceptInvite(id, type, data)),
   };
 };
 
@@ -119,7 +149,9 @@ const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
     surveyPrograms: state.surveyProgram.selfData,
-    invites: state.surveyProgram.invites,
+    invites: state.auth.invites,
+    loading: state.auth.loading,
+    invitesMeta: state.auth.invitesMeta,
   };
 };
 

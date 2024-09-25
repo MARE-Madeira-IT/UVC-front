@@ -92,9 +92,8 @@ function FormContainer(props) {
       currentTaxa.indicators.map((currentIndicator) => {
         aIndicators["indicators." + currentIndicator.name] =
           currentIndicator.pivot.name;
-        currentIndicatorList.push(currentIndicator);
+        currentIndicatorList.push(currentIndicator.name);
       });
-
       setSelectedIndicatorList(currentIndicatorList);
 
       form.setFieldsValue({

@@ -1,5 +1,4 @@
-import { Button, Checkbox, Col, Form, Input, Modal, Row, Switch } from "antd";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { Checkbox, Col, Form, Input, Modal, Row } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
@@ -17,7 +16,7 @@ const CustomModal = styled(Modal)`
 
 function FormContainer(props) {
   const [form] = Form.useForm();
-  const { visible, current, workspaces, user } = props;
+  const { visible, current, workspaces } = props;
 
   useEffect(() => {
     if (current) {
@@ -26,7 +25,7 @@ function FormContainer(props) {
       let users = currentWorkspace.users.map((el) => ({
         id: el.id,
         email: el.email,
-        show: !!el.permissions.find((el) => el.name === "show"),
+        show: true,
         create: !!el.permissions.find((el) => el.name === "create"),
         edit: !!el.permissions.find((el) => el.name === "edit"),
       }));
@@ -102,98 +101,6 @@ function FormContainer(props) {
               <Checkbox>Public</Checkbox>
             </Form.Item>
           </Col>
-
-          <Col span={24}>
-            <Form.List name="users">
-              {(fields, { add, remove }, { errors }) => (
-                <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Row key={key} gutter={16} justify="space-between">
-                      <Col span={12}>
-                        <Form.Item
-                          {...restField}
-                          label="Email"
-                          name={[name, "email"]}
-                          rules={requiredRule}
-                        >
-                          <Input
-                            disabled={
-                              form.getFieldValue(["users", name, "email"]) ===
-                              user.email
-                            }
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col span={3}>
-                        <Form.Item name={[name, "show"]} label="Ver">
-                          <Switch
-                            defaultChecked={true}
-                            defaultValue={true}
-                            disabled
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col span={3}>
-                        <Form.Item name={[name, "create"]} label="Create">
-                          <Switch
-                            disabled={
-                              form.getFieldValue(["users", name, "email"]) ===
-                              user.email
-                            }
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col span={3}>
-                        <Form.Item name={[name, "edit"]} label="Edit">
-                          <Switch
-                            disabled={
-                              form.getFieldValue(["users", name, "email"]) ===
-                              user.email
-                            }
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col xs={2}>
-                        <Button
-                          disabled={
-                            form.getFieldValue(["users", name, "email"]) ===
-                            user.email
-                          }
-                          style={{
-                            width: "100%",
-                            marginBottom: "24px",
-                            marginTop: "30px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                          danger
-                          onClick={() => {
-                            remove(name);
-                          }}
-                        >
-                          <MinusCircleOutlined />
-                        </Button>
-                      </Col>
-                    </Row>
-                  ))}
-                  <Col xs={24}>
-                    <Form.Item>
-                      <Button
-                        style={{ width: "100%" }}
-                        type="dashed"
-                        onClick={() => add()}
-                        icon={<PlusOutlined />}
-                      >
-                        Add item
-                      </Button>
-                      <Form.ErrorList errors={errors} />
-                    </Form.Item>
-                  </Col>
-                </>
-              )}
-            </Form.List>
-          </Col>
         </Row>
       </Form>
     </CustomModal>
@@ -204,7 +111,6 @@ const mapStateToProps = (state) => {
   return {
     loading: state.workspace.loading,
     workspaces: state.workspace.selfData,
-    user: state.auth.user,
   };
 };
 
