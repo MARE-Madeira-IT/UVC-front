@@ -247,7 +247,7 @@ function FormContainer(props) {
                     <p>All column names are not case-sensitive.</p>
                     <p>
                       Extra columns except for the ones in front of
-                      &quot;Indicators:&quot; and/or &quot;Functions:&quot; will
+                      &quot;Indicators&quot; and/or &quot;Functions&quot; will
                       be ignored.
                     </p>
 
@@ -323,7 +323,7 @@ function FormContainer(props) {
                                 <li>Distance: decimal</li>
                                 <li>
                                   Functions: There should always be a column
-                                  named &quot;Functions:&quot; - every column in
+                                  named &quot;Functions&quot; - every column in
                                   front of it is considered a survey program
                                   function.
                                 </li>
@@ -402,8 +402,8 @@ function FormContainer(props) {
                                 <li>Phylum: text</li>
                                 <li>
                                   Indicators: There should always be a column
-                                  named &quot;Indicators:&quot; - every column
-                                  in front of it is considered a taxa indicator.
+                                  named &quot;Indicators&quot; - every column in
+                                  front of it is considered a taxa indicator.
                                 </li>
                               </ul>
                               <p
@@ -483,8 +483,8 @@ function FormContainer(props) {
                                 <li>Phylum: text</li>
                                 <li>
                                   Indicators: There should always be a column
-                                  named &quot;Indicators:&quot; - every column
-                                  in front of it is considered a taxa indicator.
+                                  named &quot;Indicators&quot; - every column in
+                                  front of it is considered a taxa indicator.
                                 </li>
                               </ul>
                               <p
