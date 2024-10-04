@@ -103,7 +103,7 @@ function FormContainer(props) {
       if (res?.value?.data?.errors) {
         setErrors(res.value.data.errors);
       } else {
-        handleCancel()
+        handleCancel();
       }
     });
 
@@ -239,12 +239,18 @@ function FormContainer(props) {
                       </a>
                       .
                     </p>
+                    <p>
+                      <span className="required">
+                        Content should be copied to a new xlsx file
+                      </span>
+                    </p>
                     <p>All column names are not case-sensitive.</p>
                     <p>
                       Extra columns except for the ones in front of
                       &quot;Indicators:&quot; and/or &quot;Functions:&quot; will
                       be ignored.
                     </p>
+
                     <p>There should be 5 pages:</p>
                     <Collapse
                       accordion
@@ -383,7 +389,8 @@ function FormContainer(props) {
                               <ul>
                                 <li>
                                   Category<span className="required">*</span>:
-                                  text
+                                  (Macroinvertebrate, Substrate, Algae, Fish,
+                                  Litter or Other)
                                 </li>
                                 <li>
                                   Species<span className="required">*</span>:
@@ -426,7 +433,8 @@ function FormContainer(props) {
                                 </li>
                                 <li>
                                   Survey type<span className="required">*</span>
-                                  : text
+                                  : (fish, macroinvertebrates, cryptic or
+                                  dom_urchin)
                                 </li>
                                 <li>
                                   Taxa<span className="required">*</span>: text
@@ -462,7 +470,8 @@ function FormContainer(props) {
                               <ul>
                                 <li>
                                   Category<span className="required">*</span>:
-                                  text
+                                  (Macroinvertebrate, Substrate, Algae, Fish,
+                                  Litter or Other)
                                 </li>
                                 <li>
                                   Species<span className="required">*</span>:
