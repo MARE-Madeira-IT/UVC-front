@@ -27,6 +27,7 @@ function MembersFormContainer(props) {
         id: el.id,
         email: el.email,
         show: true,
+        admin: !!el.permissions.find((el) => el.name === "admin"),
         create: !!el.permissions.find((el) => el.name === "create"),
         edit: !!el.permissions.find((el) => el.name === "edit"),
       }));
@@ -71,7 +72,7 @@ function MembersFormContainer(props) {
                 <>
                   {fields.map(({ key, name, ...restField }) => (
                     <Row key={key} gutter={16} justify="space-between">
-                      <Col span={12}>
+                      <Col span={9}>
                         <Form.Item
                           {...restField}
                           label="Email"
@@ -79,6 +80,16 @@ function MembersFormContainer(props) {
                           rules={requiredRule}
                         >
                           <Input
+                            disabled={
+                              form.getFieldValue(["users", name, "email"]) ===
+                              user.email
+                            }
+                          />
+                        </Form.Item>
+                      </Col>
+                      <Col span={3}>
+                        <Form.Item name={[name, "admin"]} label="Admin">
+                          <Switch
                             disabled={
                               form.getFieldValue(["users", name, "email"]) ===
                               user.email

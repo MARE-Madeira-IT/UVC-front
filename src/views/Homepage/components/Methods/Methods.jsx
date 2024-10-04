@@ -1,8 +1,7 @@
-import { useEffect, useState } from "react";
-import styles from "./Methods.module.css";
-import { Grid, Row, Col, Divider } from "antd";
-const { useBreakpoint } = Grid;
 import { DownloadOutlined } from "@ant-design/icons";
+import { Col, Divider, Grid, Row } from "antd";
+import styles from "./Methods.module.css";
+const { useBreakpoint } = Grid;
 
 function Methods() {
     const { md } = useBreakpoint();

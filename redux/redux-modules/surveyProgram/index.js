@@ -7,6 +7,7 @@ const initialState = {
   statistics: { members: 0, report: 0, sites: 0, taxa: 0 },
   current: {},
   loading: false,
+  importStatus: {},
 };
 
 export default (state = initialState, action = {}) => {
@@ -23,6 +24,7 @@ export default (state = initialState, action = {}) => {
         loading: true,
       };
 
+    case `${types.FETCH_IMPORT_STATUS}_PENDING`:
     case `${types.FETCH_SELF_SURVEY_PROGRAMS}_REJECTED`:
     case `${types.CREATE_SURVEY_PROGRAM}_REJECTED`:
     case `${types.FETCH_SURVEY_PROGRAM_STATISTICS}_REJECTED`:
@@ -30,11 +32,27 @@ export default (state = initialState, action = {}) => {
     case `${types.DELETE_SURVEY_PROGRAM}_REJECTED`:
     case `${types.UPDATE_SURVEY_PROGRAM}_REJECTED`:
     case `${types.UPDATE_SURVEY_PROGRAM_USERS}_REJECTED`:
+    case `${types.FETCH_IMPORT_STATUS}_REJECTED`:
       return {
         ...state,
         loading: false,
       };
-
+    case `${types.FETCH_IMPORT_STATUS}_FULFILLED`:
+      return {
+        ...state,
+        loading: false,
+        selfData:
+          !action?.payload?.data?.start_date && action?.payload?.data?.errors
+            ? state.selfData.filter((record) => record.id !== action.meta.id)
+            : state.selfData,
+        selfMeta:
+          !action?.payload?.data?.start_date && action?.payload?.data?.errors
+            ? { ...state.selfMeta, total: state.selfMeta.total + 1 }
+            : state.selfMeta,
+        importStatus: action?.payload?.data?.start_date
+          ? action.payload.data
+          : {},
+      };
     case `${types.FETCH_SURVEY_PROGRAMS}_FULFILLED`:
       return {
         ...state,

@@ -270,7 +270,7 @@ function SurveyProgram(props) {
 
                     <Row>
                       <div className="links-container">
-                        {surveyProgram?.permissions?.includes("edit") && (
+                        {surveyProgram?.permissions?.includes("admin") && (
                           <button
                             onClick={() => handleMembers(surveyProgram.id)}
                           >
@@ -278,14 +278,14 @@ function SurveyProgram(props) {
                             <UserOutlined />
                           </button>
                         )}
-                        {surveyProgram?.permissions?.includes("edit") && (
+                        {surveyProgram?.permissions?.includes("admin") && (
                           <button onClick={() => handleEdit(surveyProgram.id)}>
                             <p>Edit</p>
                             <EditFilled />
                           </button>
                         )}
 
-                        {surveyProgram?.permissions?.includes("edit") && (
+                        {surveyProgram?.permissions?.includes("admin") && (
                           <Popconfirm
                             title="Do you want to delete?"
                             okText="Yes"

@@ -108,14 +108,14 @@ function FormContainer(props) {
   const getTaxaFilters = (type) => {
     switch (type) {
       case "fish":
-        return { categories: ["fish"] };
+        return { categories: ["Fish"] };
       case "macroinvertebrates":
-        return { categories: ["macroinv"] };
+        return { categories: ["Macroinvertebrate"] };
       case "cryptic":
-        return { categories: ["fish", "macroinv", "litter"] };
+        return { categories: ["Fish", "Macroinvertebrate", "Litter"] };
       case "dom_urchin":
         return {
-          categories: ["macroinv"],
+          categories: ["Macroinvertebrate"],
           species: [
             "Diadema africanum",
             "Sphaerechinus granularis",
@@ -126,7 +126,7 @@ function FormContainer(props) {
         };
 
       default:
-        return { categories: ["macroinv", "fish", "other"] };
+        return { categories: ["Macroinvertebrate", "Fish", "Other"] };
     }
   };
 

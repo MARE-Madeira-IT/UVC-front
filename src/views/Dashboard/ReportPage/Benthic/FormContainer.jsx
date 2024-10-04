@@ -1,5 +1,14 @@
-import { Button, Col, Form, Input, message, Modal, Row } from "antd";
-import { useEffect } from "react";
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  message,
+  Modal,
+  Pagination,
+  Row,
+} from "antd";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
@@ -13,6 +22,7 @@ import {
 } from "../../../../../redux/redux-modules/benthic/actions";
 import SubstrateRemoteSelectContainer from "../../SurveyProgramPage/Substrate/ExternalRemoteSelectContainer";
 import ReportRemoteSelectContainer from "../Report/RemoteSelectContainer";
+import moment from "moment";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -36,13 +46,16 @@ function FormContainer(props) {
     benthics,
   } = props;
   const [form] = Form.useForm();
+  const [page, setPage] = useState(1);
 
   const handleOk = () => {
     form.validateFields().then((values) => {
       if (current) {
-        update(current, { ...values, survey_program_id: surveyProgramId }).then(() => {
-          handleCancel();
-        });
+        update(current, { ...values, survey_program_id: surveyProgramId }).then(
+          () => {
+            handleCancel();
+          }
+        );
       } else {
         create({ ...values, survey_program_id: surveyProgramId })
           .then(() => {
@@ -60,6 +73,7 @@ function FormContainer(props) {
 
   const handleCancel = () => {
     props.handleCancel();
+    setPage(1);
     form.resetFields();
   };
 
@@ -71,7 +85,7 @@ function FormContainer(props) {
     let substrate = null,
       taxa = [];
 
-    let other_taxa = taxas.find((el) => el.name === "other");
+    let other_taxa = taxas.find((el) => el.name === "Other");
     let bare_taxa = other_taxa?.taxas?.find((el) => el.name === "Bare");
 
     if (!other_taxa || !bare_taxa) {
@@ -130,18 +144,19 @@ function FormContainer(props) {
   }, []);
 
   useEffect(() => {
-    if (visible) {
+    if (visible && taxas) {
       if (current) {
-        const benthic = benthics.find((el) => el.id === current);
+        const benthic = benthics.find((el) => el.report_id === current);
 
-        var newBenthics = [];
-        benthic.children.map((benthic) => {
-          newBenthics.push({
-            ...benthic,
+        var newBenthics = benthic.children.map((benthic) => {
+          return {
+            substrate_id: benthic?.substrate_id,
+            notes: benthic?.notes,
+            p: benthic?.p,
             taxa_id: benthic?.taxa?.id
               ? [benthic?.taxa?.category?.id, benthic?.taxa?.id]
               : undefined,
-          });
+          };
         });
 
         form.setFieldsValue({
@@ -155,7 +170,7 @@ function FormContainer(props) {
         form.setFieldValue("benthics", a);
       }
     }
-  }, [visible, current]);
+  }, [visible, current, taxas]);
 
   const benthicsWatch = Form.useWatch("benthics", form);
 
@@ -190,6 +205,7 @@ function FormContainer(props) {
 
   return (
     <CustomModal
+      destroyOnClose
       width={1200}
       title="Fill the benthic data"
       open={visible}
@@ -224,55 +240,63 @@ function FormContainer(props) {
             <Form.List name="benthics">
               {(fields) => (
                 <>
-                  {fields.map(({ key, name, ...restField }) => (
-                    <Row key={key} gutter={16} justify="space-between">
-                      <Col span={3}>
-                        <Form.Item
-                          {...restField}
-                          label="P##"
-                          name={[name, "p"]}
-                          rules={requiredRule}
-                        >
-                          <Input disabled />
-                        </Form.Item>
-                      </Col>
-                      <Col span={7}>
-                        <Form.Item
-                          {...restField}
-                          label="Substrate"
-                          name={[name, "substrate_id"]}
-                          rules={requiredRule}
-                        >
-                          <SubstrateRemoteSelectContainer
-                            surveyProgramId={surveyProgramId}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item
-                          {...restField}
-                          rules={requiredRule}
-                          label="Taxa"
-                          name={[name, "taxa_id"]}
-                        >
-                          <RemoteCascadeContainer
-                            loadTaxas={false}
-                            categories={["macroinv", "algae", "other"]}
-                            surveyProgramId={surveyProgramId}
-                          />
-                        </Form.Item>
-                      </Col>
-                      <Col span={6}>
-                        <Form.Item
-                          {...restField}
-                          label="Notes"
-                          name={[name, "notes"]}
-                        >
-                          <Input />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  ))}
+                  {fields
+                    .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                    .map(({ key, name, ...restField }) => (
+                      <Row key={key} gutter={16} justify="space-between">
+                        <Col span={3}>
+                          <Form.Item
+                            {...restField}
+                            label="P##"
+                            name={[name, "p"]}
+                            rules={requiredRule}
+                          >
+                            <Input disabled />
+                          </Form.Item>
+                        </Col>
+                        <Col span={7}>
+                          <Form.Item
+                            {...restField}
+                            label="Substrate"
+                            name={[name, "substrate_id"]}
+                            rules={requiredRule}
+                          >
+                            <SubstrateRemoteSelectContainer
+                              surveyProgramId={surveyProgramId}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={8}>
+                          <Form.Item
+                            {...restField}
+                            rules={requiredRule}
+                            label="Taxa"
+                            name={[name, "taxa_id"]}
+                          >
+                            <RemoteCascadeContainer
+                              loadTaxas={false}
+                              categories={["Macroinvertebrate", "Algae", "Other"]}
+                              surveyProgramId={surveyProgramId}
+                            />
+                          </Form.Item>
+                        </Col>
+                        <Col span={6}>
+                          <Form.Item
+                            {...restField}
+                            label="Notes"
+                            name={[name, "notes"]}
+                          >
+                            <Input />
+                          </Form.Item>
+                        </Col>
+                      </Row>
+                    ))}
+                  <Pagination
+                    showSizeChanger={false}
+                    current={page}
+                    onChange={(e) => setPage(e)}
+                    total={fields?.length}
+                  />
                 </>
               )}
             </Form.List>

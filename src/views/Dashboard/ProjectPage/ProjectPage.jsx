@@ -235,20 +235,20 @@ function ProjectPage(props) {
                     </div>
                     <Row>
                       <div className="links-container">
-                        {item?.permissions?.includes("edit") && (
+                        {item?.permissions?.includes("admin") && (
                           <button onClick={() => handleMembers(item.id)}>
                             <p>Members</p>
                             <UserOutlined />
                           </button>
                         )}
-                        {item?.permissions?.includes("edit") && (
+                        {item?.permissions?.includes("admin") && (
                           <button onClick={() => handleEdit(item.id)}>
                             <p>Edit</p>
                             <EditFilled />
                           </button>
                         )}
 
-                        {item?.permissions?.includes("edit") && (
+                        {item?.permissions?.includes("admin") && (
                           <Popconfirm
                             title="Do you want to delete?"
                             okText="Yes"

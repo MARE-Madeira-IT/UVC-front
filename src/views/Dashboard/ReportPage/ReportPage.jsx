@@ -13,7 +13,6 @@ import axiosConfig from "src/axiosConfig";
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
-  margin: 100px 0px;
 `;
 
 function ReportPage(props) {

@@ -60,7 +60,7 @@ function Benthic(props) {
         />
         <Row style={{ marginBottom: "20px" }}>
           <Input.Search
-            onSearch={(e) => setFilters({...filters, search: e })}
+            onSearch={(e) => setFilters({ ...filters, search: e })}
             size="large"
             type="search"
             placeholder="Search by name or email"

@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import RowOperation from "../../Common/RowOperation";
 import TableComponent from "../../Common/TableComponent";
+import moment from "moment";
 
 const Container = styled.div`
   width: 100%;
@@ -44,6 +45,7 @@ function TableContainer({
       title: "Date",
       dataIndex: "date",
       width: 150,
+      render: (date) => moment(date).format("YYYY-MM-DD"),
     },
     {
       title: "Locality",
@@ -80,7 +82,7 @@ function TableContainer({
     {
       title: "Depth",
       dataIndex: "depth",
-      render: (depth) => depth.name + " (" + depth.id + "#)",
+      render: (depth) => depth.name + " (" + depth.code + "#)",
       width: 150,
     },
     {
@@ -136,37 +138,37 @@ function TableContainer({
           title: "FISH",
           dataIndex: "functions",
           width: 150,
-          render: (functions) => functions[0].pivot.user,
+          render: (functions) => functions[0]?.pivot?.user,
         },
         {
           title: "CRYPTIC",
           dataIndex: "functions",
           width: 150,
-          render: (functions) => functions[1].pivot.user,
+          render: (functions) => functions[1]?.pivot?.user,
         },
         {
-          title: "MACROINV.",
+          title: "MACROINV?.",
           dataIndex: "functions",
           width: 150,
-          render: (functions) => functions[2].pivot.user,
+          render: (functions) => functions[2]?.pivot?.user,
         },
         {
           title: "DOM_URCHIN",
           dataIndex: "functions",
           width: 150,
-          render: (functions) => functions[3].pivot.user,
+          render: (functions) => functions[3]?.pivot?.user,
         },
         {
           title: "BENTHIC",
           dataIndex: "functions",
           width: 150,
-          render: (functions) => functions[4].pivot.user,
+          render: (functions) => functions[4]?.pivot?.user,
         },
         {
           title: "PHOTO",
           dataIndex: "functions",
           width: 150,
-          render: (functions) => functions[5].pivot.user,
+          render: (functions) => functions[5]?.pivot?.user,
         },
       ],
     },

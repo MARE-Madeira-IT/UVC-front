@@ -11,7 +11,6 @@ import Locality from "./Locality/Locality";
 import Members from "./Members/Members";
 import Statistics from "./Statistics";
 import Taxa from "./Taxa/Taxa";
-import TaxaCategory from "./TaxaCategory/TaxaCategory";
 import axiosConfig from "src/axiosConfig";
 
 const Container = styled.section`
@@ -59,21 +58,21 @@ function SurveyProgramPage(props) {
         <Taxa surveyProgramId={id} />
       </Row>
       <Row gutter={64}>
-        <Col md={24} lg={12}>
+        <Col md={24} lg={8}>
           <Indicator surveyProgramId={id} />
         </Col>
-        <Col md={24} lg={12}>
+        <Col md={24} lg={8}>
           <Depth surveyProgramId={id} />
         </Col>
-      </Row>
-      <Row gutter={64}>
-        <Col md={24} lg={12}>
+        <Col md={24} lg={8}>
           <Function surveyProgramId={id} />
         </Col>
-        <Col md={24} lg={12}>
-          <TaxaCategory surveyProgramId={id} />
-        </Col>
       </Row>
+      {/* <Row gutter={64}> */}
+      {/* <Col md={24} lg={12}>
+          <TaxaCategory surveyProgramId={id} />
+        </Col> */}
+      {/* </Row> */}
     </Container>
   );
 }

@@ -49,7 +49,7 @@ function FormContainer(props) {
   return (
     <CustomModal
       width={720}
-      title="Edit survye program's taxa categories"
+      title="Edit survey program's taxa categories"
       open={visible}
       onCancel={handleCancel}
       centered

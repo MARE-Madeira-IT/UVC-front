@@ -31,12 +31,9 @@ export function loginSuccess(user) {
 
 export const logout = () => {
   return (dispatch) => {
-    const response = dispatch({
+    dispatch({
       type: types.LOGOUT,
       payload: axiosConfig.get(`${import.meta.env.VITE_API}/api/logout`),
-    });
-    response.then((res) => {
-      window.localStorage.removeItem("persist:root");
     });
   };
 };

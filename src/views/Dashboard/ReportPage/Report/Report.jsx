@@ -16,7 +16,7 @@ import TableContainer from "./TableContainer";
 const Container = styled.div`
   width: 100%;
   box-sizing: border-box;
-  margin: 100px 0px;
+  margin: 50px 0px;
 `;
 
 const ContentContainer = styled.div`

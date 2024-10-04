@@ -29,7 +29,7 @@ function TableContainer({
   const columns = [
     {
       title: "#",
-      dataIndex: "id",
+      dataIndex: "code",
     },
     {
       title: "Depth",

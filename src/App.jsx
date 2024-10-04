@@ -11,31 +11,12 @@ import SurveyProgramPage from "./views/Dashboard/SurveyProgramPage/SurveyProgram
 import ReportPage from "./views/Dashboard/ReportPage/ReportPage";
 import "mapbox-gl/dist/mapbox-gl.css";
 import ProjectList from "./views/Dashboard/ProjectListPage/ProjectList";
-import { useEffect } from "react";
-import axiosConfig from "./axiosConfig";
 import { connect } from "react-redux";
 import { logout } from "../redux/redux-modules/auth/actions";
 import ProjectPage from "./views/Dashboard/ProjectPage/ProjectPage";
 import SurveyProgram from "./views/Dashboard/SurveyProgramPage/SurveyProgram/SurveyProgram";
 
 function App(props) {
-  useEffect(() => {
-    axiosConfig.interceptors.response.use(
-      (res) => {
-        return res;
-      },
-      (error) => {
-        if (
-          !error.config.url.includes("logout") &&
-          error.response.status === 401
-        ) {
-          props.logout();
-        }
-        return error;
-      }
-    );
-  }, []);
-
   return (
     <div className="app">
       <BrowserRouter>

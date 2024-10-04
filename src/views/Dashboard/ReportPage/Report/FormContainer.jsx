@@ -31,7 +31,6 @@ function FormContainer(props) {
   const [sample, setSample] = useState([
     undefined, //locality code
     undefined, //site code
-    undefined, //site area
     undefined, //"Time" + time
     undefined, //"D" + depth.id
     undefined, //"R" + replica
@@ -119,7 +118,6 @@ function FormContainer(props) {
       setSample([
         currentReport.site.locality.code,
         currentReport.site.code,
-        currentReport.site_area,
         "Time" + currentReport.time, //"Time" + time
         "D" + currentReport.depth.id, //"D" + depth.id
         "D" + currentReport.replica, //"R" + replica
@@ -141,7 +139,7 @@ function FormContainer(props) {
   const handleDepth = (e) => {
     const depth = props.depths.find((element) => element.id == e);
 
-    handleSampleChange("D" + depth.id, 4);
+    handleSampleChange("D" + depth.id, 3);
   };
 
   const handleSampleChange = (value, index) => {
@@ -216,7 +214,7 @@ function FormContainer(props) {
 
           <Col xs={24} md={6}>
             <Form.Item label="Site area" name="site_area">
-              <Input onChange={(e) => handleSampleChange(e.target.value, 2)} />
+              <Input />
             </Form.Item>
           </Col>
           <Col xs={24} md={6}>
@@ -242,7 +240,7 @@ function FormContainer(props) {
           <Col xs={12} md={6}>
             <Form.Item label="Time#" name="time" rules={requiredRule}>
               <InputNumber
-                onChange={(e) => handleSampleChange("Time" + e, 3)}
+                onChange={(e) => handleSampleChange("Time" + e, 2)}
                 style={{ width: "100%" }}
               />
             </Form.Item>
@@ -250,7 +248,7 @@ function FormContainer(props) {
           <Col xs={12} md={6}>
             <Form.Item label="Replica#" name="replica" rules={requiredRule}>
               <InputNumber
-                onChange={(e) => handleSampleChange("R" + e, 5)}
+                onChange={(e) => handleSampleChange("R" + e, 4)}
                 style={{ width: "100%" }}
               />
             </Form.Item>

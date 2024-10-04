@@ -26,7 +26,6 @@ export default (state = initialState, action = {}) => {
     case `${types.CREATE_USER}_REJECTED`:
     case `${types.ME}_REJECTED`:
     case `${types.LOGIN}_REJECTED`:
-    case `${types.LOGOUT}_REJECTED`:
     case `${types.UPDATE_PROFILE_PICTURE}_REJECTED`:
     case `${types.ACCEPT_INVITE}_REJECTED`:
     case `${types.FETCH_INVITES}_REJECTED`:
@@ -52,6 +51,8 @@ export default (state = initialState, action = {}) => {
       };
 
     case `${types.LOGOUT}_FULFILLED`:
+    case `${types.LOGOUT}_REJECTED`:
+      window.localStorage.removeItem("persist:root");
       return {
         ...state,
         loading: false,

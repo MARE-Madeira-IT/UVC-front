@@ -33,7 +33,10 @@ function RemoteCascadeContainer(props) {
       }}
       expandTrigger="hover"
       options={props.data}
-      onChange={props.onChange}
+      onChange={(e) => {
+        setOpenCascader(false);
+        props.onChange(e);
+      }}
       dropdownRender={(menus) => {
         return (
           <>

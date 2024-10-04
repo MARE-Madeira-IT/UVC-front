@@ -50,7 +50,7 @@ function TaxaCategory(props) {
   return (
     <Container>
       <TitleAddSection
-        title="Survey program taxa"
+        title="Taxa Categories"
         handleClick={() => setVisible(true)}
       />
 

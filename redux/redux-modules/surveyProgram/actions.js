@@ -4,9 +4,11 @@ import queryString from "query-string";
 
 export const fetchSelfSurveyPrograms = (page, filters) => ({
   type: types.FETCH_SELF_SURVEY_PROGRAMS,
-  payload: axiosConfig.get(`/self-survey-programs?${queryString.stringify(filters, {
-    arrayFormat: "index",
-  })}&page=${page}`),
+  payload: axiosConfig.get(
+    `/self-survey-programs?${queryString.stringify(filters, {
+      arrayFormat: "index",
+    })}&page=${page}`
+  ),
 });
 
 export const fetchSurveyProgramStatistics = (id) => ({
@@ -25,7 +27,18 @@ export const fetchSurveyPrograms = (filters = {}) => ({
 
 export const createSurveyProgram = (data) => ({
   type: types.CREATE_SURVEY_PROGRAM,
-  payload: axiosConfig.post(`/surveyPrograms`, data),
+  payload: axiosConfig.post(`/surveyPrograms`, data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    timeout: 600000, // 5min
+  }),
+});
+
+export const getImportStatus = (id) => ({
+  type: types.FETCH_IMPORT_STATUS,
+  payload: axiosConfig.get(`surveyPrograms/importStatus/${id}`),
+  meta: { id },
 });
 
 export const updateSurveyProgram = (id, data) => ({
