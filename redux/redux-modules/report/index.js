@@ -43,7 +43,7 @@ export default (state = initialState, action = {}) => {
       return {
         ...state,
         loading: false,
-        coordinates: action.payload.data,
+        coordinates: action.payload.data.data ,
       };
 
     case `${types.CREATE_REPORT}_FULFILLED`:
@@ -51,7 +51,9 @@ export default (state = initialState, action = {}) => {
         ...state,
         loading: false,
         data: [...state.data, action.payload.data.data],
-        meta: !state.meta?.total ? {} : { ...state.meta, total: state.meta.total + 1 },
+        meta: !state.meta?.total
+          ? {}
+          : { ...state.meta, total: state.meta.total + 1 },
       };
 
     case `${types.FETCH_REPORTS}_FULFILLED`:

@@ -17,6 +17,7 @@ import { requiredRule } from "src/helper";
 import styled from "styled-components";
 import { UploadOutlined } from "@ant-design/icons";
 import { getImportStatus } from "../../../../../redux/redux-modules/surveyProgram/actions";
+import moment from "moment";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -50,6 +51,7 @@ const ErrorsContainer = styled.div`
 function FormContainer(props) {
   const [form] = Form.useForm();
   const [errors, setErrors] = useState();
+  const [remainingTime, setRemainingTime] = useState();
   const [fetchProgressId, setFetchProgressId] = useState();
   const {
     visible,
@@ -102,7 +104,7 @@ function FormContainer(props) {
     props.getImportStatus(id).then((res) => {
       if (res?.value?.data?.errors) {
         setErrors(res.value.data.errors);
-      } else {
+      } else if (!res?.value?.data?.start_date) {
         handleCancel();
       }
     });
@@ -141,6 +143,48 @@ function FormContainer(props) {
 
   const importXLSX = Form.useWatch("import", form);
 
+  const calcProgress = (key) => {
+    let val =
+      (importStatus[key]?.current_row / importStatus[key]?.total_rows) * 100;
+
+    return importStatus[key]?.current_row && importStatus[key]?.total_rows
+      ? Math.round(val)
+      : 0;
+  };
+
+  const calcRemainingTime = () => {
+    let now = moment();
+    let end = moment(importStatus.predicted_end);
+
+    let diff = moment(end).diff(now);
+
+    if (diff <= 0) {
+      return "0min0s";
+    }
+
+    let duration = moment.duration(diff);
+
+    let min = Math.floor(duration.asMinutes());
+    let sec = Math.floor(duration.asSeconds() % 60);
+
+    setRemainingTime(`${min}min${sec}s`);
+  };
+
+  useEffect(() => {
+    let interval;
+    if (importStatus.start_date && importStatus.predicted_end) {
+      interval = setInterval(() => {
+        calcRemainingTime();
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [importStatus]);
+
   return (
     <CustomModal
       width={720}
@@ -158,7 +202,9 @@ function FormContainer(props) {
             width: "fit-content",
           }}
         >
-          <Button onClick={handleCancel}>Cancel</Button>
+          <Button disabled={loading || fetchProgressId} onClick={handleCancel}>
+            Cancel
+          </Button>
           <Button
             onClick={handleOk}
             loading={loading || fetchProgressId}
@@ -169,381 +215,391 @@ function FormContainer(props) {
         </div>
       }
     >
-      <Form
-        initialValues={{ public: true }}
-        style={{ margin: "30px auto" }}
-        layout="vertical"
-        requiredMark
-        form={form}
-      >
-        <Row gutter={16}>
-          <Col span={24}>
-            <Form.Item label="Title" name="name" rules={requiredRule}>
-              <Input />
-            </Form.Item>
-          </Col>
+      {fetchProgressId && importStatus?.start_date ? (
+        <Flex gap="small" vertical>
+          <div>
+            <p>{"DIVE_SITE_METADATA"}</p>
+            <Progress percent={calcProgress("DIVE_SITE_METADATA")} />
+          </div>
+          <div>
+            <p>{"BENTHIC_TAXAS"}</p>
+            <Progress percent={calcProgress("BENTHIC_TAXAS")} />
+          </div>
+          <div>
+            <p>{"MOTILE_TAXAS"}</p>
+            <Progress percent={calcProgress("MOTILE_TAXAS")} />
+          </div>
+          <div>
+            <p>{"BENTHIC_DB"}</p>
+            <Progress percent={calcProgress("BENTHIC_DB")} />
+          </div>
+          <div>
+            <p>{"MOTILE_DB"}</p>
+            <Progress percent={calcProgress("MOTILE_DB")} />
+          </div>
+          Remaining:{" "}
+          {importStatus?.predicted_end ? remainingTime : "Calculating..."}
+        </Flex>
+      ) : (
+        <Form
+          initialValues={{ public: true }}
+          style={{ margin: "30px auto" }}
+          layout="vertical"
+          requiredMark
+          form={form}
+        >
+          <Row gutter={16}>
+            {!(fetchProgressId && importStatus?.start_date) && (
+              <>
+                <Col span={24}>
+                  <Form.Item label="Title" name="name" rules={requiredRule}>
+                    <Input />
+                  </Form.Item>
+                </Col>
 
-          <Col span={24}>
-            <Form.Item
-              label="Description"
-              name="description"
-              rules={requiredRule}
-            >
-              <Input.TextArea rows={4} />
-            </Form.Item>
-          </Col>
-          {!current && (
-            <Col span={24}>
-              <Form.Item label="Import" name="import">
-                <Switch />
-              </Form.Item>
-            </Col>
-          )}
-
-          {importXLSX && (
-            <Col span={24}>
-              <div className="import_description">
-                {fetchProgressId && importStatus?.start_date ? (
-                  <Flex gap="small" vertical>
-                    {Object.keys(importStatus).map(
-                      (key, i) =>
-                        key !== "errors" &&
-                        key !== "start_date" && (
-                          <div key={i}>
-                            <p>{key}</p>
-                            <Progress
-                              percent={Math.round(
-                                importStatus[key]?.current_row &&
-                                  importStatus[key]?.total_rows
-                                  ? (importStatus[key]?.current_row /
-                                      importStatus[key]?.total_rows) *
-                                      100
-                                  : 0
-                              )}
-                            />
-                          </div>
-                        )
-                    )}
-                  </Flex>
-                ) : (
-                  <>
-                    <p>
-                      The import XLSX file should follow a specific
-                      <a
-                        href={`${
-                          import.meta.env.VITE_API
-                        }/templates/UW_SurveyProgram_Import.xlsx`}
-                      >
-                        {" "}
-                        template
-                      </a>
-                      .
-                    </p>
-                    <p>
-                      <span className="required">
-                        Content should be copied to a new xlsx file
-                      </span>
-                    </p>
-                    <p>All column names are not case-sensitive.</p>
-                    <p>
-                      Extra columns except for the ones in front of
-                      &quot;Indicators&quot; and/or &quot;Functions&quot; will
-                      be ignored.
-                    </p>
-
-                    <p>There should be 5 pages:</p>
-                    <Collapse
-                      accordion
-                      items={[
-                        {
-                          key: 1,
-                          label: (
-                            <>
-                              <b>DIVE_SITE_METADATA </b> with:
-                            </>
-                          ),
-                          children: (
-                            <div>
-                              <ul>
-                                <li>SAMPLE#</li>
-                                <li>
-                                  Date <span className="required">*</span>: date
-                                  (YYYYMMDD)
-                                </li>
-                                <li>
-                                  Locality<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  Locality Code
-                                  <span className="required">*</span>: text
-                                </li>
-                                <li>
-                                  Site<span className="required">*</span>: text
-                                </li>
-                                <li>
-                                  Site Code<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  Daily_dive#<span className="required">*</span>
-                                  : integer
-                                </li>
-                                <li>
-                                  Transect#<span className="required">*</span>:
-                                  integer
-                                </li>
-                                <li>
-                                  Depth category
-                                  <span className="required">*</span>: text
-                                </li>
-                                <li>
-                                  Depth#<span className="required">*</span>:
-                                  integer
-                                </li>
-                                <li>
-                                  Time#<span className="required">*</span>:
-                                  integer
-                                </li>
-                                <li>
-                                  Replica<span className="required">*</span>:
-                                  integer
-                                </li>
-                                <li>
-                                  Latitude<span className="required">*</span>:
-                                  decimal
-                                </li>
-                                <li>
-                                  Longitude<span className="required">*</span>:
-                                  decimal
-                                </li>
-                                <li>Heading: integer</li>
-                                <li>Heading direction: decimal</li>
-                                <li>Site area: text</li>
-                                <li>Distance: decimal</li>
-                                <li>
-                                  Functions: There should always be a column
-                                  named &quot;Functions&quot; - every column in
-                                  front of it is considered a survey program
-                                  function.
-                                </li>
-                              </ul>
-                              <p
-                                style={{
-                                  margin: "0 0 0 auto",
-                                  width: "fit-content",
-                                }}
-                              >
-                                <span className="required">*</span> Required
-                              </p>
-                            </div>
-                          ),
-                        },
-                        {
-                          key: 2,
-                          label: (
-                            <>
-                              <b>BENTHIC_DB </b> with:
-                            </>
-                          ),
-                          children: (
-                            <div>
-                              <ul>
-                                <li>
-                                  SAMPLE#<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  P##<span className="required">*</span>:
-                                  integer
-                                </li>
-                                <li>
-                                  Substrate<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  Taxa<span className="required">*</span>: text
-                                </li>
-                                <li>Notes</li>: text
-                              </ul>
-                              <p
-                                style={{
-                                  margin: "0 0 0 auto",
-                                  width: "fit-content",
-                                }}
-                              >
-                                <span className="required">*</span> Required
-                              </p>
-                            </div>
-                          ),
-                        },
-                        {
-                          key: 3,
-                          label: (
-                            <>
-                              <b>BENTHIC_TAXAS</b> with:
-                            </>
-                          ),
-                          children: (
-                            <div>
-                              <ul>
-                                <li>
-                                  Category<span className="required">*</span>:
-                                  (Macroinvertebrate, Substrate, Algae, Fish,
-                                  Litter or Other)
-                                </li>
-                                <li>
-                                  Species<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  Genus<span className="required">*</span>: text
-                                </li>
-                                <li>Phylum: text</li>
-                                <li>
-                                  Indicators: There should always be a column
-                                  named &quot;Indicators&quot; - every column in
-                                  front of it is considered a taxa indicator.
-                                </li>
-                              </ul>
-                              <p
-                                style={{
-                                  margin: "0 0 0 auto",
-                                  width: "fit-content",
-                                }}
-                              >
-                                <span className="required">*</span> Required
-                              </p>
-                            </div>
-                          ),
-                        },
-                        {
-                          key: 4,
-                          label: (
-                            <>
-                              <b>MOTILE_DB </b>with:
-                            </>
-                          ),
-                          children: (
-                            <div>
-                              <ul>
-                                <li>
-                                  SAMPLE#<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  Survey type<span className="required">*</span>
-                                  : (fish, macroinvertebrates, cryptic or
-                                  dom_urchin)
-                                </li>
-                                <li>
-                                  Taxa<span className="required">*</span>: text
-                                </li>
-                                <li>Size Category: text</li>
-                                <li>Size: number</li>
-                                <li>
-                                  Ntotal<span className="required">*</span>:
-                                  number
-                                </li>
-                                <li>Notes: text</li>
-                              </ul>
-                              <p
-                                style={{
-                                  margin: "0 0 0 auto",
-                                  width: "fit-content",
-                                }}
-                              >
-                                <span className="required">*</span> Required
-                              </p>
-                            </div>
-                          ),
-                        },
-                        {
-                          key: 5,
-                          label: (
-                            <>
-                              <b>MOTILE_TAXAS </b>with:
-                            </>
-                          ),
-                          children: (
-                            <div>
-                              <ul>
-                                <li>
-                                  Category<span className="required">*</span>:
-                                  (Macroinvertebrate, Substrate, Algae, Fish,
-                                  Litter or Other)
-                                </li>
-                                <li>
-                                  Species<span className="required">*</span>:
-                                  text
-                                </li>
-                                <li>
-                                  Genus<span className="required">*</span>: text
-                                </li>
-                                <li>Phylum: text</li>
-                                <li>
-                                  Indicators: There should always be a column
-                                  named &quot;Indicators&quot; - every column in
-                                  front of it is considered a taxa indicator.
-                                </li>
-                              </ul>
-                              <p
-                                style={{
-                                  margin: "0 0 0 auto",
-                                  width: "fit-content",
-                                }}
-                              >
-                                <span className="required">*</span> Required
-                              </p>
-                            </div>
-                          ),
-                        },
-                      ]}
-                    />
-                    <Form.Item
-                      rules={requiredRule}
-                      name="file"
-                      valuePropName="fileList"
-                      getValueFromEvent={(e) => {
-                        setErrors([]);
-                        if (Array.isArray(e)) {
-                          return e;
-                        }
-                        return e?.fileList;
-                      }}
-                      noStyle
-                    >
-                      <Dragger
-                        style={{ marginTop: "20px" }}
-                        multiple={false}
-                        accept=".xlsx"
-                      >
-                        <p className="ant-upload-drag-icon">
-                          <UploadOutlined />
-                        </p>
-                        <p className="ant-upload-text">
-                          Click or drag file to this area to upload
-                        </p>
-                      </Dragger>
+                <Col span={24}>
+                  <Form.Item
+                    label="Description"
+                    name="description"
+                    rules={requiredRule}
+                  >
+                    <Input.TextArea rows={4} />
+                  </Form.Item>
+                </Col>
+                {!current && (
+                  <Col span={24}>
+                    <Form.Item label="Import" name="import">
+                      <Switch />
                     </Form.Item>
-                  </>
+                  </Col>
                 )}
+              </>
+            )}
 
-                {errors?.length > 0 && (
-                  <div style={{ marginTop: "20px" }}>
-                    <p>Errors ({errors.length}):</p>
-                    <ErrorsContainer>
-                      {errors.map((el, i) => (
-                        <p key={i}>{el}</p>
-                      ))}
-                    </ErrorsContainer>
-                  </div>
-                )}
-              </div>
-            </Col>
-          )}
-        </Row>
-      </Form>
+            {importXLSX && (
+              <Col span={24}>
+                <div className="import_description">
+                  <p>
+                    The import XLSX file should follow a specific
+                    <a
+                      href={`${
+                        import.meta.env.VITE_API
+                      }/templates/UW_SurveyProgram_Import.xlsx`}
+                    >
+                      {" "}
+                      template
+                    </a>
+                    .
+                  </p>
+                  <p>
+                    <span className="required">
+                      Content should be copied to a new xlsx file
+                    </span>
+                  </p>
+                  <p>All column names are not case-sensitive.</p>
+                  <p>
+                    Extra columns except for the ones in front of
+                    &quot;Indicators&quot; and/or &quot;Functions&quot; will be
+                    ignored.
+                  </p>
+
+                  <p>There should be 5 pages:</p>
+                  <Collapse
+                    accordion
+                    items={[
+                      {
+                        key: 1,
+                        label: (
+                          <>
+                            <b>DIVE_SITE_METADATA </b> with:
+                          </>
+                        ),
+                        children: (
+                          <div>
+                            <ul>
+                              <li>SAMPLE#</li>
+                              <li>
+                                Date <span className="required">*</span>: date
+                                (YYYYMMDD)
+                              </li>
+                              <li>
+                                Locality<span className="required">*</span>:
+                                text
+                              </li>
+                              <li>
+                                Locality Code
+                                <span className="required">*</span>: text
+                              </li>
+                              <li>
+                                Site<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                Site Code<span className="required">*</span>:
+                                text
+                              </li>
+                              <li>
+                                Daily_dive#<span className="required">*</span>:
+                                integer
+                              </li>
+                              <li>
+                                Transect#<span className="required">*</span>:
+                                integer
+                              </li>
+                              <li>
+                                Depth category
+                                <span className="required">*</span>: text
+                              </li>
+                              <li>
+                                Depth#<span className="required">*</span>:
+                                integer
+                              </li>
+                              <li>
+                                Time#<span className="required">*</span>:
+                                integer
+                              </li>
+                              <li>
+                                Replica<span className="required">*</span>:
+                                integer
+                              </li>
+                              <li>
+                                Latitude<span className="required">*</span>:
+                                decimal
+                              </li>
+                              <li>
+                                Longitude<span className="required">*</span>:
+                                decimal
+                              </li>
+                              <li>Heading: integer</li>
+                              <li>Heading direction: decimal</li>
+                              <li>Site area: text</li>
+                              <li>Distance: decimal</li>
+                              <li>
+                                Functions: There should always be a column named
+                                &quot;Functions&quot; - every column in front of
+                                it is considered a survey program function.
+                              </li>
+                            </ul>
+                            <p
+                              style={{
+                                margin: "0 0 0 auto",
+                                width: "fit-content",
+                              }}
+                            >
+                              <span className="required">*</span> Required
+                            </p>
+                          </div>
+                        ),
+                      },
+                      {
+                        key: 2,
+                        label: (
+                          <>
+                            <b>BENTHIC_DB </b> with:
+                          </>
+                        ),
+                        children: (
+                          <div>
+                            <ul>
+                              <li>
+                                SAMPLE#<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                P##<span className="required">*</span>: integer
+                              </li>
+                              <li>
+                                Substrate<span className="required">*</span>:
+                                (block, rubble, boulder, platform, pavement,
+                                sand, gravel, rumble)
+                              </li>
+                              <li>
+                                Taxa<span className="required">*</span>: text
+                              </li>
+                              <li>Notes: text</li>
+                            </ul>
+                            <p
+                              style={{
+                                margin: "0 0 0 auto",
+                                width: "fit-content",
+                              }}
+                            >
+                              <span className="required">*</span> Required
+                            </p>
+                          </div>
+                        ),
+                      },
+                      {
+                        key: 3,
+                        label: (
+                          <>
+                            <b>BENTHIC_TAXAS</b> with:
+                          </>
+                        ),
+                        children: (
+                          <div>
+                            <ul>
+                              <li>
+                                Category<span className="required">*</span>:
+                                (Macroinvertebrate, Substrate, Algae, Fish,
+                                Litter or Other)
+                              </li>
+                              <li>
+                                taxa<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                Genus<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                species<span className="required">*</span>: text
+                              </li>
+                              <li>Phylum: text</li>
+                              <li>
+                                Indicators: There should always be a column
+                                named &quot;Indicators&quot; - every column in
+                                front of it is considered a taxa indicator.
+                              </li>
+                            </ul>
+                            <p
+                              style={{
+                                margin: "0 0 0 auto",
+                                width: "fit-content",
+                              }}
+                            >
+                              <span className="required">*</span> Required
+                            </p>
+                          </div>
+                        ),
+                      },
+                      {
+                        key: 4,
+                        label: (
+                          <>
+                            <b>MOTILE_DB </b>with:
+                          </>
+                        ),
+                        children: (
+                          <div>
+                            <ul>
+                              <li>
+                                SAMPLE#<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                Survey type<span className="required">*</span>:
+                                (fish, macroinvertebrates, cryptic or
+                                dom_urchin)
+                              </li>
+                              <li>
+                                Taxa<span className="required">*</span>: text
+                              </li>
+                              <li>Size Category: text</li>
+                              <li>
+                                Surveyed area
+                                <span className="required">*</span>: 100 or 200
+                              </li>
+                              <li>Size: number</li>
+                              <li>
+                                Ntotal<span className="required">*</span>:
+                                number
+                              </li>
+                              <li>Notes: text</li>
+                            </ul>
+                            <p
+                              style={{
+                                margin: "0 0 0 auto",
+                                width: "fit-content",
+                              }}
+                            >
+                              <span className="required">*</span> Required
+                            </p>
+                          </div>
+                        ),
+                      },
+                      {
+                        key: 5,
+                        label: (
+                          <>
+                            <b>MOTILE_TAXAS </b>with:
+                          </>
+                        ),
+                        children: (
+                          <div>
+                            <ul>
+                              <li>
+                                Category<span className="required">*</span>:
+                                (Macroinvertebrate, Substrate, Algae, Fish,
+                                Litter or Other)
+                              </li>
+                              <li>
+                                taxa<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                Genus<span className="required">*</span>: text
+                              </li>
+                              <li>
+                                species<span className="required">*</span>: text
+                              </li>
+                              <li>Phylum: text</li>
+                              <li>
+                                Indicators: There should always be a column
+                                named &quot;Indicators&quot; - every column in
+                                front of it is considered a taxa indicator.
+                              </li>
+                            </ul>
+                            <p
+                              style={{
+                                margin: "0 0 0 auto",
+                                width: "fit-content",
+                              }}
+                            >
+                              <span className="required">*</span> Required
+                            </p>
+                          </div>
+                        ),
+                      },
+                    ]}
+                  />
+                  <Form.Item
+                    rules={requiredRule}
+                    name="file"
+                    valuePropName="fileList"
+                    getValueFromEvent={(e) => {
+                      setErrors([]);
+                      if (Array.isArray(e)) {
+                        return e;
+                      }
+                      return e?.fileList;
+                    }}
+                    noStyle
+                  >
+                    <Dragger
+                      style={{ marginTop: "20px" }}
+                      multiple={false}
+                      accept=".xlsx"
+                    >
+                      <p className="ant-upload-drag-icon">
+                        <UploadOutlined />
+                      </p>
+                      <p className="ant-upload-text">
+                        Click or drag file to this area to upload
+                      </p>
+                    </Dragger>
+                  </Form.Item>
+
+                  {errors?.length > 0 && (
+                    <div style={{ marginTop: "20px" }}>
+                      <p>Errors ({errors.length}):</p>
+                      <ErrorsContainer>
+                        {errors.map((el, i) => (
+                          <p key={i}>{el}</p>
+                        ))}
+                      </ErrorsContainer>
+                    </div>
+                  )}
+                </div>
+              </Col>
+            )}
+          </Row>
+        </Form>
+      )}
     </CustomModal>
   );
 }

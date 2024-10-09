@@ -23,11 +23,11 @@ const PopupContent = styled.div`
 `;
 
 function ReportMap(props) {
-  const { data } = props;
+  const { data, surveyProgramId } = props;
   const [popupInfo, setPopupInfo] = useState(null);
 
   useEffect(() => {
-    props.fetchReportCoordinates();
+    props.fetchReportCoordinates({ survey_program: surveyProgramId });
   }, []);
 
   return (
