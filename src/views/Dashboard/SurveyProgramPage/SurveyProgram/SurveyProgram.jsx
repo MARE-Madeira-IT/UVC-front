@@ -243,9 +243,10 @@ function SurveyProgram(props) {
                       <Link
                         to={`${
                           import.meta.env.VITE_API
-                        }/api/underwater-survey/export/${surveyProgram.id}`}
+                        }/api/export/${surveyProgram.id}`}
                       >
                         <button>
+                          <p>Export</p>
                           <FileOutlined />
                         </button>
                       </Link>

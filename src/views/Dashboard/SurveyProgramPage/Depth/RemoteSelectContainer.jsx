@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 function RemoteSelectContainer(props) {
 
     useEffect(() => {
-        props.fetchSelectorDepths({ survey_program_id: props.surveyProgramId })
+        props.fetchSelectorDepths({ survey_program: props.surveyProgramId })
     }, [])
 
 
