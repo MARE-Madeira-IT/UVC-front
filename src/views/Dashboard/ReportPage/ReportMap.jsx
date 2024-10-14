@@ -23,7 +23,7 @@ const PopupContent = styled.div`
 `;
 
 function ReportMap(props) {
-  const { data, surveyProgramId } = props;
+  const { data, surveyProgramId, setFilters } = props;
   const [popupInfo, setPopupInfo] = useState(null);
 
   useEffect(() => {
@@ -73,7 +73,19 @@ function ReportMap(props) {
               </p>
               <p className="date">{popupInfo.date}</p>
 
-              <a>View more</a>
+              <a
+                onClick={() => {
+                  setFilters((filters) => ({
+                    ...filters,
+                    search: popupInfo.code,
+                  }));
+                  document.getElementById("report-list").scrollIntoView({
+                    behavior: "smooth",
+                  });
+                }}
+              >
+                View more
+              </a>
             </PopupContent>
           </Popup>
         )}

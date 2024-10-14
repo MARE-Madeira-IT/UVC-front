@@ -39,12 +39,8 @@ function ReportPage(props) {
     <Container>
       {contextHolder}
       <Row gutter={64}>
-        <Col span={24}>
-          <Report surveyProgramId={id} />
-        </Col>
-        <Col span={24}>
-          <ReportMap surveyProgramId={id} />
-        </Col>
+        <Report surveyProgramId={id} />
+
         <Col span={24}>
           <Motile surveyProgramId={id} />
         </Col>

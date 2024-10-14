@@ -1,4 +1,4 @@
-import { Input, Row } from "antd";
+import { Col, Input, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
@@ -12,6 +12,7 @@ import {
 import TitleAddSection from "../../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import TableContainer from "./TableContainer";
+import ReportMap from "../ReportMap";
 
 const Container = styled.div`
   width: 100%;
@@ -50,40 +51,48 @@ function Report(props) {
   };
 
   return (
-    <Container>
-      <TitleAddSection
-        permissions={permissions}
-        title="Survey(s)"
-        handleClick={() => setVisible(true)}
-      />
-
-      <ContentContainer>
-        <FormContainer
-          visible={visible}
-          handleCancel={handleCancel}
-          current={current}
-          create={props.createReport}
-          update={props.updateReport}
-          surveyProgramId={surveyProgramId}
-        />
-        <Row style={{ marginBottom: "20px" }}>
-          <Input.Search
-            onSearch={(e) => setFilters({ ...filters, search: e })}
-            size="large"
-            type="search"
-            placeholder="Search by locality or site"
+    <>
+      <Col span={24}>
+        <Container id="report-list">
+          <TitleAddSection
+            permissions={permissions}
+            title="Survey(s)"
+            handleClick={() => setVisible(true)}
           />
-        </Row>
-        <TableContainer
-          handlePageChange={handlePageChange}
-          data={data}
-          loading={loading}
-          meta={meta}
-          setCurrent={handleEdit}
-          handleDelete={props.deleteReport}
-        />
-      </ContentContainer>
-    </Container>
+
+          <ContentContainer>
+            <FormContainer
+              visible={visible}
+              handleCancel={handleCancel}
+              current={current}
+              create={props.createReport}
+              update={props.updateReport}
+              surveyProgramId={surveyProgramId}
+            />
+            <Row style={{ marginBottom: "20px" }}>
+              <Input.Search
+                value={filters?.search}
+                onSearch={(e) => setFilters({ ...filters, search: e })}
+                size="large"
+                type="search"
+                placeholder="Search by locality or site"
+              />
+            </Row>
+            <TableContainer
+              handlePageChange={handlePageChange}
+              data={data}
+              loading={loading}
+              meta={meta}
+              setCurrent={handleEdit}
+              handleDelete={props.deleteReport}
+            />
+          </ContentContainer>
+        </Container>
+      </Col>
+      <Col span={24}>
+        <ReportMap setFilters={setFilters} surveyProgramId={surveyProgramId} />
+      </Col>
+    </>
   );
 }
 
