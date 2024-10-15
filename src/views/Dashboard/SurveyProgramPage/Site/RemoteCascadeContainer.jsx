@@ -5,10 +5,21 @@ import { connect } from "react-redux";
 import { fetchSelectorLocalities } from "../../../../../redux/redux-modules/locality/actions";
 
 function RemoteCascadeContainer(props) {
+  const {
+    fetchSelectorLocalities,
+    surveyProgramId,
+    maxTagCount,
+    multiple,
+    value,
+    selectCat,
+    data,
+    loading,
+    create = true,
+  } = props;
   const [openCascader, setOpenCascader] = useState(false);
 
   const getData = () => {
-    props.fetchSelectorLocalities({ survey_program_id: props.surveyProgramId });
+    fetchSelectorLocalities({ survey_program: surveyProgramId });
   };
 
   useEffect(() => {
@@ -20,21 +31,30 @@ function RemoteCascadeContainer(props) {
     };
   }, []);
 
+  useEffect(() => {
+    getData();
+  }, [surveyProgramId]);
+
   return (
     <Cascader
+      maxTagCount={maxTagCount}
+      multiple={multiple}
       onMouseDown={() => setOpenCascader(true)}
       open={openCascader}
-      value={props.value}
+      value={value}
       showSearch
+      changeOnSelect={selectCat}
       fieldNames={{
         label: "name",
         value: "id",
         children: "sites",
       }}
       expandTrigger="hover"
-      options={props.data}
+      options={data}
       onChange={(e) => {
-        setOpenCascader(false);
+        if (!multiple) {
+          setOpenCascader(false);
+        }
         props.onChange(e);
       }}
       dropdownRender={(menus) => {
@@ -53,21 +73,23 @@ function RemoteCascadeContainer(props) {
             />
             <div style={{ zIndex: 200, position: "relative" }}>
               {menus}
-              <Button
-                type="primary"
-                icon={<PlusOutlined />}
-                loading={props.loading}
-                style={{ width: "100%", marginTop: "10px" }}
-                popupMatchSelectWidth={false}
-                onClick={() => {
-                  window.open(
-                    `/dashboard/surveyPrograms/${props.surveyProgramId}`,
-                    "_blank"
-                  );
-                }}
-              >
-                NEW
-              </Button>
+              {create && (
+                <Button
+                  type="primary"
+                  icon={<PlusOutlined />}
+                  loading={loading}
+                  style={{ width: "100%", marginTop: "10px" }}
+                  popupMatchSelectWidth={false}
+                  onClick={() => {
+                    window.open(
+                      `/dashboard/surveyPrograms/${surveyProgramId}`,
+                      "_blank"
+                    );
+                  }}
+                >
+                  NEW
+                </Button>
+              )}
             </div>
           </>
         );

@@ -24,6 +24,10 @@ function RemoteCascadeContainer(props) {
     loading,
     disabled,
     loadTaxas = true,
+    maxTagCount,
+    multiple,
+    selectCat,
+    create = true,
   } = props;
   const [options, setOptions] = useState([]);
 
@@ -62,17 +66,19 @@ function RemoteCascadeContainer(props) {
   }, [species, categories, data, loading]);
 
   useEffect(() => {
-    if (value && options?.length > 0) {
-      let possibleIds = [];
-      if (options[0]?.taxas) {
-        options.forEach((cat) => {
-          possibleIds = [...possibleIds, ...cat.taxas.map((taxa) => taxa.id)];
-        });
-      } else {
-        possibleIds = options.map((taxa) => taxa.id);
-      }
-      if (!possibleIds.includes(value[1])) {
-        onChange(null);
+    if (!multiple) {
+      if (value && options?.length > 0) {
+        let possibleIds = [];
+        if (options[0]?.taxas) {
+          options.forEach((cat) => {
+            possibleIds = [...possibleIds, ...cat.taxas.map((taxa) => taxa.id)];
+          });
+        } else {
+          possibleIds = options.map((taxa) => taxa.id);
+        }
+        if (!possibleIds.includes(value[1])) {
+          onChange(null);
+        }
       }
     }
   }, [options, value]);
@@ -81,9 +87,14 @@ function RemoteCascadeContainer(props) {
     <>
       <Cascader
         disabled={disabled}
+        maxTagCount={maxTagCount}
+        multiple={multiple}
+        changeOnSelect={selectCat}
         open={openCascader}
         onMouseDown={() => setOpenCascader(true)}
-        value={options?.length === 1 && value ? value[1] : value}
+        value={
+          multiple ? value : options?.length === 1 && value ? value[1] : value
+        }
         showSearch
         fieldNames={{
           label: "name",
@@ -93,11 +104,16 @@ function RemoteCascadeContainer(props) {
         expandTrigger="hover"
         options={options?.length === 1 ? options[0].taxas : options}
         onChange={(e) => {
-          setOpenCascader(false);
-          if (options?.length === 1) {
-            onChange([options[0]?.id, ...e]);
-          } else {
+          if (multiple) {
             onChange(e);
+          } else {
+            setOpenCascader(false);
+
+            if (options?.length === 1) {
+              onChange([options[0]?.id, ...e]);
+            } else {
+              onChange(e);
+            }
           }
         }}
         onSearch={() => setOpenCascader(true)}
@@ -117,72 +133,74 @@ function RemoteCascadeContainer(props) {
               />
               <div style={{ zIndex: 200, position: "relative" }}>
                 {menus}
-                <Flex>
-                  <Select
-                    defaultValue={1}
-                    onChange={(e) => setNewTaxaCategoryId(e)}
-                    options={data}
-                    fieldNames={{ label: "name", value: "id" }}
-                    dropdownRender={(menu) => (
-                      <div
-                        onMouseDown={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                        }}
-                      >
-                        {menu}
-                      </div>
-                    )}
-                  />
-                  <Tooltip
-                    open={createTaxaError}
-                    trigger={null}
-                    title="Name taken"
-                    color="#ff4949"
-                  >
-                    <Input
-                      style={{
-                        borderColor: createTaxaError ? "#ff4949" : null,
-                      }}
-                      placeholder="Create new"
-                      onChange={(e) => setNewTaxaName(e.target.value)}
+                {create && (
+                  <Flex>
+                    <Select
+                      defaultValue={1}
+                      onChange={(e) => setNewTaxaCategoryId(e)}
+                      options={data}
+                      fieldNames={{ label: "name", value: "id" }}
+                      dropdownRender={(menu) => (
+                        <div
+                          onMouseDown={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                          }}
+                        >
+                          {menu}
+                        </div>
+                      )}
                     />
-                  </Tooltip>
-                  <Button
-                    type="primary"
-                    icon={<PlusOutlined />}
-                    loading={props.loading}
-                    style={{ aspectRatio: 1, flexShrink: 0 }}
-                    popupMatchSelectWidth={false}
-                    onClick={async () => {
-                      try {
-                        let res = await props.createTaxa({
-                          name: newTaxaName,
-                          genus: newTaxaName,
-                          survey_program_id: surveyProgramId,
-                          category_id: newTaxaCategoryId,
-                        });
+                    <Tooltip
+                      open={createTaxaError}
+                      trigger={null}
+                      title="Name taken"
+                      color="#ff4949"
+                    >
+                      <Input
+                        style={{
+                          borderColor: createTaxaError ? "#ff4949" : null,
+                        }}
+                        placeholder="Create new"
+                        onChange={(e) => setNewTaxaName(e.target.value)}
+                      />
+                    </Tooltip>
+                    <Button
+                      type="primary"
+                      icon={<PlusOutlined />}
+                      loading={props.loading}
+                      style={{ aspectRatio: 1, flexShrink: 0 }}
+                      popupMatchSelectWidth={false}
+                      onClick={async () => {
+                        try {
+                          let res = await props.createTaxa({
+                            name: newTaxaName,
+                            genus: newTaxaName,
+                            survey_program_id: surveyProgramId,
+                            category_id: newTaxaCategoryId,
+                          });
 
-                        await props.fetchSelectorTaxas({
-                          surveyProgram: surveyProgramId,
-                        });
+                          await props.fetchSelectorTaxas({
+                            surveyProgram: surveyProgramId,
+                          });
 
-                        onChange(
-                          options[0]?.taxas
-                            ? [newTaxaCategoryId, res?.value?.data?.data?.id]
-                            : [res?.value?.data?.data?.id]
-                        );
-                        setOpenCascader(false);
+                          onChange(
+                            options[0]?.taxas
+                              ? [newTaxaCategoryId, res?.value?.data?.data?.id]
+                              : [res?.value?.data?.data?.id]
+                          );
+                          setOpenCascader(false);
 
-                        //Open popup to insert photo
-                        setPhotoUploadTaxaId(res?.value?.data?.data?.id);
-                        setCreateTaxaError(null);
-                      } catch (err) {
-                        setCreateTaxaError(err);
-                      }
-                    }}
-                  />
-                </Flex>
+                          //Open popup to insert photo
+                          setPhotoUploadTaxaId(res?.value?.data?.data?.id);
+                          setCreateTaxaError(null);
+                        } catch (err) {
+                          setCreateTaxaError(err);
+                        }
+                      }}
+                    />
+                  </Flex>
+                )}
               </div>
             </>
           );

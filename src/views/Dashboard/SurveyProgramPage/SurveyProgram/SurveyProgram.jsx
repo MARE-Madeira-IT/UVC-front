@@ -23,6 +23,7 @@ import MembersFormContainer from "../../Common/MembersFormContainer";
 import FormContainer from "./FormContainer";
 import ListContainer from "./ListContainer";
 import TitleAddSection from "../../Common/TitleAddSection";
+import ExportModal from "./ExportModal";
 
 const Container = styled.section`
   width: 100%;
@@ -127,6 +128,7 @@ function SurveyProgram(props) {
 
   const [current, setCurrent] = useState();
   const [visible, setVisible] = useState(false);
+  const [exportVisible, setExportVisible] = useState(false);
   const [filters, setFilters] = useState({
     project: [parseInt(searchParams.get("project_id"))],
   });
@@ -141,8 +143,14 @@ function SurveyProgram(props) {
     setVisible(true);
   };
 
+  const handleExport = (aCurrent) => {
+    setCurrent(aCurrent);
+    setExportVisible(true);
+  };
+
   const handleCancel = () => {
     setVisible(false);
+    setExportVisible(false);
     setMembersVisible(false);
     setCurrent();
   };
@@ -179,6 +187,11 @@ function SurveyProgram(props) {
         data={data}
         handleCancel={handleCancel}
         handleUsers={props.handleUsers}
+      />
+      <ExportModal
+        current={current}
+        visible={exportVisible}
+        handleCancel={handleCancel}
       />
 
       <FormContainer
@@ -240,16 +253,10 @@ function SurveyProgram(props) {
                           <img src="/assets/icons/link.svg" alt="" />
                         </button>
                       </Link>
-                      <Link
-                        to={`${
-                          import.meta.env.VITE_API
-                        }/api/export/${surveyProgram.id}`}
-                      >
-                        <button>
-                          <p>Export</p>
-                          <FileOutlined />
-                        </button>
-                      </Link>
+                      <button onClick={() => handleExport(surveyProgram.id)}>
+                        <p>Export</p>
+                        <FileOutlined />
+                      </button>
                     </div>
                   </div>
                   <p>{surveyProgram?.description}</p>
