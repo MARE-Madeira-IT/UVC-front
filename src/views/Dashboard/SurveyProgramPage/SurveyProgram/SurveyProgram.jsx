@@ -23,7 +23,7 @@ import MembersFormContainer from "../../Common/MembersFormContainer";
 import FormContainer from "./FormContainer";
 import ListContainer from "./ListContainer";
 import TitleAddSection from "../../Common/TitleAddSection";
-import ExportModal from "./ExportModal";
+import Exports from "./Export/Exports";
 
 const Container = styled.section`
   width: 100%;
@@ -188,7 +188,7 @@ function SurveyProgram(props) {
         handleCancel={handleCancel}
         handleUsers={props.handleUsers}
       />
-      <ExportModal
+      <Exports
         current={current}
         visible={exportVisible}
         handleCancel={handleCancel}

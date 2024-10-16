@@ -19,6 +19,7 @@ import projectUser from "./redux-modules/projectUser";
 import workspaceUser from "./redux-modules/workspaceUser";
 import workspace from "./redux-modules/workspace";
 import project from "./redux-modules/project";
+import _export from "./redux-modules/export";
 
 const rootReducer = combineReducers({
   auth,
@@ -41,6 +42,7 @@ const rootReducer = combineReducers({
   motile,
   size_category,
   permissions,
+  _export,
 });
 
 export default rootReducer;

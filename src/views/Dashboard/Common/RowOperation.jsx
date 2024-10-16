@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Menu, Dropdown, Popconfirm } from "antd";
-import styled from "styled-components";
+import { Dropdown, Popconfirm } from "antd";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 
 const StyledDropdownLink = styled.span`
   color: inherit;
@@ -13,7 +13,7 @@ const RowOperation = (props) => {
   useEffect(() => {
     const itemsAux = [];
 
-    if (permissions.includes("edit")) {
+    if (permissions.includes("edit") && onUpdateClick) {
       itemsAux.push({
         key: "1",
         label: onUpdateClick && (

@@ -1,12 +1,9 @@
 import { Col, DatePicker, Form, Modal } from "antd";
-import queryString from "query-string";
-import { useState } from "react";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
-import SurveySelectContainer from "../../ReportPage/Report/RemoteSelectContainer";
-import RemoteSelectContainer from "../Depth/RemoteSelectContainer";
-import RemoteCascadeContainer from "../Site/RemoteCascadeContainer";
-import TaxaRemoteCascadeContainer from "../Taxa/RemoteCascadeContainer";
+import SurveySelectContainer from "../../../ReportPage/Report/RemoteSelectContainer";
+import RemoteSelectContainer from "../../Depth/RemoteSelectContainer";
+import RemoteCascadeContainer from "../../Site/RemoteCascadeContainer";
+import TaxaRemoteCascadeContainer from "../../Taxa/RemoteCascadeContainer";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -20,44 +17,21 @@ const CustomModal = styled(Modal)`
 
 const { RangePicker } = DatePicker;
 
-const ExportModal = (props) => {
-  const [loading, setLoading] = useState(false);
+const FormContainer = (props) => {
   const [form] = Form.useForm();
-  const { visible, current } = props;
+  const { visible, current, loading } = props;
 
   const handleOk = () => {
-    setLoading(true);
     form.validateFields().then((values) => {
-      axiosConfig
-        .get(
-          `/surveyPrograms/${current}/export?${queryString.stringify(values, {
-            arrayFormat: "index",
-          })}`,
-          {
-            responseType: "blob",
-            timeout: 60000,
-          }
-        )
-        .then((response) => {
-          const href = URL.createObjectURL(response.data);
-
-          const link = document.createElement("a");
-          link.href = href;
-          document.body.appendChild(link);
-          link.click();
-
-          document.body.removeChild(link);
-          URL.revokeObjectURL(href);
-
-          handleCancel();
-        });
+      props
+        .create({ ...values, survey_program_id: current })
+        .then(() => handleCancel());
     });
   };
 
   const handleCancel = () => {
     props.handleCancel();
     form.resetFields();
-    setLoading(false);
   };
 
   return (
@@ -78,7 +52,7 @@ const ExportModal = (props) => {
         form={form}
       >
         <Col xs={24} md={24}>
-          <Form.Item label="Samples" name="report_id">
+          <Form.Item label="Samples" name="reports">
             <SurveySelectContainer
               maxTagCount="responsive"
               mode="multiple"
@@ -99,18 +73,18 @@ const ExportModal = (props) => {
           </Form.Item>
         </Col>
         <Col xs={24} md={24}>
-          <Form.Item label="Depths" name="depth_id">
+          <Form.Item label="Depths" name="depths">
             <RemoteSelectContainer mode="multiple" surveyProgramId={current} />
           </Form.Item>
         </Col>
 
         <Col xs={24} md={24}>
-          <Form.Item label="Date" name="date">
+          <Form.Item label="Date" name="dates">
             <RangePicker style={{ width: "100%" }} />
           </Form.Item>
         </Col>
         <Col xs={24} md={24}>
-          <Form.Item label="Localities and Sites" name="site">
+          <Form.Item label="Localities and Sites" name="sites">
             <RemoteCascadeContainer
               create={false}
               maxTagCount="responsive"
@@ -125,4 +99,4 @@ const ExportModal = (props) => {
   );
 };
 
-export default ExportModal;
+export default FormContainer;

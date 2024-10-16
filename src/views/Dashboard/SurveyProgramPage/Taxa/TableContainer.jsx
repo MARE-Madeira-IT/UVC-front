@@ -59,11 +59,6 @@ const ValidateButtonContainer = styled.div`
   }
 `;
 
-const colorDecoder = {
-  admin: "gold",
-  validator: "cyan",
-};
-
 const TaxaBadge = ({ validated, has_photo }) => {
   if (validated) {
     return <Badge color={"green"} size="large" />;
