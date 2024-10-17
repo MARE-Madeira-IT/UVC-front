@@ -10,13 +10,13 @@ import {
   GlobalOutlined,
 } from "@ant-design/icons";
 
-const logoPaths = [
-  "logoMARE",
-  "logoWave",
-  "logoArditi",
-  "logoArnet",
-  "logoUMa",
-  "logoFCT",
+const partners = [
+  { url: "https://mare-madeira.pt/", imageName: "logoMARE" },
+  { url: "https://wave-labs.org/", imageName: "logoWave" },
+  { url: "https://arditi.pt/", imageName: "logoArditi" },
+  { url: "https://arnet.pt/", imageName: "logoArnet" },
+  { url: "https://www.uma.pt/", imageName: "logoUMa" },
+  { url: "https://www.fct.pt/", imageName: "logoFCT" },
 ];
 
 function Footer() {
@@ -24,14 +24,16 @@ function Footer() {
     <div className={styles.container}>
       <Divider style={{ borderTop: "1px solid grey" }} />
       <Row gutter={[16, 16]} justify={"space-around"} align={"middle"}>
-        {logoPaths.map((element, index) => (
+        {partners.map((element, index) => (
           <Col key={index} lg={2} md={3} sm={4} xs={6}>
-            <div className={styles.logos}>
-              <img
-                src={`/assets/logos/${element}.webp`}
-                alt="Logos of funders"
-              />
-            </div>
+            <Link to={element.url} target="_blank">
+              <div className={styles.logos}>
+                <img
+                  src={`/assets/logos/${element.imageName}.webp`}
+                  alt="Logos of funders"
+                />
+              </div>
+            </Link>
           </Col>
         ))}
       </Row>
