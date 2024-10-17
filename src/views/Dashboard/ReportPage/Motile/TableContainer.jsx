@@ -17,11 +17,6 @@ const Container = styled.div`
   }
 `;
 
-const colorDecoder = {
-  admin: "gold",
-  validator: "cyan",
-};
-
 function TableContainer({
   loading,
   data,
@@ -91,7 +86,7 @@ function TableContainer({
     {
       title: "Density/100",
       width: 150,
-      render: (_, rest) => rest["density/1"] / 100,
+      render: (_, rest) => (rest["density/1"] ? rest["density/1"] / 100 : ""),
     },
     {
       title: "Density/1",
@@ -101,7 +96,7 @@ function TableContainer({
     {
       title: "gr/100",
       width: 150,
-      render: (_, rest) => rest["biomass/1"] / 100,
+      render: (_, rest) => (rest["biomass/1"] ? rest["biomass/1"] / 100 : ""),
     },
     {
       title: "gr/1",

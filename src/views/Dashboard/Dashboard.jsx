@@ -1,6 +1,6 @@
+import { Empty } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import {
   acceptInvite,
@@ -9,7 +9,6 @@ import {
 import { fetchSelfWorkspaces } from "../../../redux/redux-modules/workspace/actions";
 import ListContainer from "./ListContainer";
 import Workspace from "./Workspace/Workspace";
-import { Empty } from "antd";
 
 const Container = styled.section`
   width: 100%;
@@ -64,7 +63,7 @@ function Dashboard(props) {
   const { user, invites, invitesMeta, loading } = props;
 
   useEffect(() => {
-    axiosConfig.defaults.headers.common["survey_program"] = null;
+    // axiosConfig.defaults.headers.common["survey_program"] = null;
     props.fetchAllInvites();
   }, []);
 
@@ -129,7 +128,10 @@ function Dashboard(props) {
             }}
           />
         ) : (
-          <Empty description="You don't have any notifications right now." imageStyle={{maxHeight: '60px'}} />
+          <Empty
+            description="You don't have any notifications right now."
+            imageStyle={{ maxHeight: "60px" }}
+          />
         )}
       </UserDataContainer>
       <Workspace />

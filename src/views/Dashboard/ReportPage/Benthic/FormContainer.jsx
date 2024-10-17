@@ -22,7 +22,6 @@ import {
 } from "../../../../../redux/redux-modules/benthic/actions";
 import SubstrateRemoteSelectContainer from "../../SurveyProgramPage/Substrate/ExternalRemoteSelectContainer";
 import ReportRemoteSelectContainer from "../Report/RemoteSelectContainer";
-import moment from "moment";
 
 const CustomModal = styled(Modal)`
   .ant-modal-body {
@@ -150,6 +149,7 @@ function FormContainer(props) {
 
         var newBenthics = benthic.children.map((benthic) => {
           return {
+            id: benthic?.id,
             substrate_id: benthic?.substrate_id,
             notes: benthic?.notes,
             p: benthic?.p,
@@ -165,7 +165,7 @@ function FormContainer(props) {
         });
       } else {
         // Init p## field for 100 transects
-        let a = new Array(20).fill(1).map((_, i) => ({ p: i + 1 }));
+        let a = new Array(100).fill(1).map((_, i) => ({ p: i + 1 }));
 
         form.setFieldValue("benthics", a);
       }
@@ -275,7 +275,11 @@ function FormContainer(props) {
                           >
                             <RemoteCascadeContainer
                               loadTaxas={false}
-                              categories={["Macroinvertebrate", "Algae", "Other"]}
+                              categories={[
+                                "Macroinvertebrate",
+                                "Algae",
+                                "Other",
+                              ]}
                               surveyProgramId={surveyProgramId}
                             />
                           </Form.Item>

@@ -6,7 +6,7 @@ import { fetchSelectorDepths } from "../../../../../redux/redux-modules/depth/ac
 function RemoteSelectContainer(props) {
   useEffect(() => {
     props.fetchSelectorDepths({ survey_program: props.surveyProgramId });
-  }, []);
+  }, [props.surveyProgramId]);
 
   return (
     <Select

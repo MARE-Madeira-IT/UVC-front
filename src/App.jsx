@@ -1,22 +1,20 @@
+import "mapbox-gl/dist/mapbox-gl.css";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import PrivateRoute from "./components/PrivateRoute";
+import Dashboard from "./views/Dashboard/Dashboard";
+import ProjectList from "./views/Dashboard/ProjectListPage/ProjectList";
+import ProjectPage from "./views/Dashboard/ProjectPage/ProjectPage";
+import ReportPage from "./views/Dashboard/ReportPage/ReportPage";
+import SurveyProgram from "./views/Dashboard/SurveyProgramPage/SurveyProgram/SurveyProgram";
+import SurveyProgramPage from "./views/Dashboard/SurveyProgramPage/SurveyProgramPage";
 import Footer from "./views/Footer/Footer";
 import Homepage from "./views/Homepage/Homepage";
-import Navbar from "./views/Navbar/Navbar";
-import Dashboard from "./views/Dashboard/Dashboard";
-import PrivateRoute from "./components/PrivateRoute";
 import Login from "./views/Login/Login";
+import Navbar from "./views/Navbar/Navbar";
 import Register from "./views/Register/Register";
-import SurveyProgramPage from "./views/Dashboard/SurveyProgramPage/SurveyProgramPage";
-import ReportPage from "./views/Dashboard/ReportPage/ReportPage";
-import "mapbox-gl/dist/mapbox-gl.css";
-import ProjectList from "./views/Dashboard/ProjectListPage/ProjectList";
-import { connect } from "react-redux";
-import { logout } from "../redux/redux-modules/auth/actions";
-import ProjectPage from "./views/Dashboard/ProjectPage/ProjectPage";
-import SurveyProgram from "./views/Dashboard/SurveyProgramPage/SurveyProgram/SurveyProgram";
 
-function App(props) {
+function App() {
   return (
     <div className="app">
       <BrowserRouter>
@@ -85,10 +83,5 @@ function App(props) {
     </div>
   );
 }
-const mapDispatchToProps = (dispatch) => {
-  return {
-    logout: () => dispatch(logout()),
-  };
-};
 
-export default connect(null, mapDispatchToProps)(App);
+export default App;

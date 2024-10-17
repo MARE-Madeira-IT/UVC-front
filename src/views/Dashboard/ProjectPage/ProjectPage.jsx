@@ -1,9 +1,8 @@
-import { EditFilled, UserOutlined, DeleteFilled } from "@ant-design/icons";
+import { DeleteFilled, EditFilled, UserOutlined } from "@ant-design/icons";
 import { Empty, Input, Popconfirm, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import {
   createProject,
@@ -13,11 +12,11 @@ import {
   setCurrentProject,
   updateProject,
 } from "../../../../redux/redux-modules/project/actions";
+import { setCurrentWorkspace } from "../../../../redux/redux-modules/workspace/actions";
 import MembersFormContainer from "../Common/MembersFormContainer";
+import TitleAddSection from "../Common/TitleAddSection";
 import FormContainer from "./FormContainer";
 import ListContainer from "./ListContainer";
-import { setCurrentWorkspace } from "../../../../redux/redux-modules/workspace/actions";
-import TitleAddSection from "../Common/TitleAddSection";
 
 const Container = styled.section`
   width: 100%;
@@ -141,7 +140,7 @@ function ProjectPage(props) {
   useEffect(() => {
     let workspaceId = parseInt(searchParams.get("workspace_id"));
     props.fetchSelfProjects(null, filters);
-    axiosConfig.defaults.headers.common["workspace"] = workspaceId;
+    // axiosConfig.defaults.headers.common["workspace"] = workspaceId;
 
     if (!currentWorkspace) {
       props.setCurrentWorkspace(

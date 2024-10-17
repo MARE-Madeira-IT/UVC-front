@@ -8,7 +8,6 @@ import { Empty, Input, Popconfirm, Row } from "antd";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link, useSearchParams } from "react-router-dom";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import { setCurrentProject } from "../../../../../redux/redux-modules/project/actions";
 import {
@@ -20,10 +19,10 @@ import {
 } from "../../../../../redux/redux-modules/surveyProgram/actions";
 import { setCurrentWorkspace } from "../../../../../redux/redux-modules/workspace/actions";
 import MembersFormContainer from "../../Common/MembersFormContainer";
-import FormContainer from "./FormContainer";
-import ListContainer from "./ListContainer";
 import TitleAddSection from "../../Common/TitleAddSection";
 import Exports from "./Export/Exports";
+import FormContainer from "./FormContainer";
+import ListContainer from "./ListContainer";
 
 const Container = styled.section`
   width: 100%;
@@ -163,7 +162,7 @@ function SurveyProgram(props) {
     let workspaceId = parseInt(searchParams.get("workspace_id"));
     let projectId = parseInt(searchParams.get("project_id"));
     props.fetchSelfSurveyPrograms(1, filters);
-    axiosConfig.defaults.headers.common["workspace"] = workspaceId;
+    // axiosConfig.defaults.headers.common["workspace"] = workspaceId;
 
     if (!currentWorkspace) {
       props.setCurrentWorkspace(

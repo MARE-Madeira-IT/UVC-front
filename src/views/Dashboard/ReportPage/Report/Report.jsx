@@ -72,7 +72,9 @@ function Report(props) {
             <Row style={{ marginBottom: "20px" }}>
               <Input.Search
                 value={filters?.search}
-                onSearch={(e) => setFilters({ ...filters, search: e })}
+                onChange={(e) =>
+                  setFilters({ ...filters, search: e.target.value })
+                }
                 size="large"
                 type="search"
                 placeholder="Search by locality or site"

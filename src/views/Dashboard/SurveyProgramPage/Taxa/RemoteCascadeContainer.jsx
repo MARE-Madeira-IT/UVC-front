@@ -37,7 +37,7 @@ function RemoteCascadeContainer(props) {
         surveyProgram: surveyProgramId,
       });
     }
-  }, []);
+  }, [surveyProgramId]);
 
   const updateList = () => {
     let optionsAux;

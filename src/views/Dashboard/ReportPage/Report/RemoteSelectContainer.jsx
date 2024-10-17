@@ -13,7 +13,7 @@ const CustomSelect = styled(Select)`
 function RemoteSelectContainer(props) {
   useEffect(() => {
     props.fetchSelectorReports({ surveyProgram: props.surveyProgramId });
-  }, []);
+  }, [props.surveyProgramId]);
 
   const labelRender = (props) => {
     const { label, value } = props;

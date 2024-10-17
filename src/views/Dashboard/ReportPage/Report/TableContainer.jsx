@@ -31,9 +31,10 @@ function TableContainer({
   const columns = [
     {
       title: "#",
-      dataIndex: "id",
+      dataIndex: "",
       fixed: "left",
       width: 80,
+      render: (_, __, index) => index + 1,
     },
     {
       title: "Sample",

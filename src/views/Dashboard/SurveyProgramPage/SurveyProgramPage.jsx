@@ -11,7 +11,6 @@ import Locality from "./Locality/Locality";
 import Members from "./Members/Members";
 import Statistics from "./Statistics";
 import Taxa from "./Taxa/Taxa";
-import axiosConfig from "src/axiosConfig";
 
 const Container = styled.section`
   width: 100%;
@@ -26,7 +25,7 @@ function SurveyProgramPage(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosConfig.defaults.headers.common["survey_program"] = id;
+    // axiosConfig.defaults.headers.common["survey_program"] = id;
 
     fetchPermissions(id).catch((err) => {
       if (err.response.status === 403) {

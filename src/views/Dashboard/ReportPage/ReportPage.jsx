@@ -2,7 +2,6 @@ import { Col, message, Row } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import axiosConfig from "src/axiosConfig";
 import styled from "styled-components";
 import { fetchPermissions } from "../../../../redux/redux-modules/permissions/actions";
 import Benthic from "./Benthic/Benthic";
@@ -21,7 +20,7 @@ function ReportPage(props) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosConfig.defaults.headers.common["survey_program"] = id;
+    // axiosConfig.defaults.headers.common["survey_program"] = id;
 
     fetchPermissions(id).catch((err) => {
       if (err.response.status === 403) {

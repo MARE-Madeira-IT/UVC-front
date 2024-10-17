@@ -12,7 +12,7 @@ const ErrorsContainer = styled.div`
   overflow-y: auto;
 `;
 
-function FormImportSection({setErrors, errors}) {
+function FormImportSection({ setErrors, errors }) {
   return (
     <Col span={24}>
       <div className="import_description">
@@ -294,6 +294,7 @@ function FormImportSection({setErrors, errors}) {
           noStyle
         >
           <Dragger
+            beforeUpload={() => false}
             style={{ marginTop: "20px" }}
             multiple={false}
             accept=".xlsx"
