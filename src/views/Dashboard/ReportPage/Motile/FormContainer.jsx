@@ -10,7 +10,7 @@ import {
   Row,
   Select,
 } from "antd";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
@@ -30,6 +30,7 @@ const CustomModal = styled(Modal)`
 
 function FormContainer(props) {
   const [form] = Form.useForm();
+  const [existingTaxaIds, setExistingTaxaIds] = useState([]);
   const { current, visible, surveyProgramId, motiles } = props;
   const type = Form.useWatch("type", form);
 
@@ -178,6 +179,29 @@ function FormContainer(props) {
                             rules={requiredRule}
                           >
                             <RemoteCascadeContainer
+                              changeListener={() => {
+                                setExistingTaxaIds(
+                                  form
+                                    .getFieldValue(["motiles"])
+                                    .map((el) =>
+                                      el.taxa_id ? el.taxa_id[1] : null
+                                    )
+                                );
+                              }}
+                              ignore={existingTaxaIds.filter(
+                                (el) =>
+                                  form.getFieldValue([
+                                    "motiles",
+                                    field.name,
+                                    "taxa_id",
+                                  ]) == null ||
+                                  el !==
+                                    form.getFieldValue([
+                                      "motiles",
+                                      field.name,
+                                      "taxa_id",
+                                    ])[1]
+                              )}
                               disabled={!type}
                               species={getTaxaFilters(type).species}
                               surveyProgramId={surveyProgramId}
@@ -227,7 +251,7 @@ function FormContainer(props) {
                         </Col>
                       </Flex>
                     </Col>
-                    <Col xs={2}>
+                    <Col style={{ padding: 0 }} xs={2}>
                       <Flex
                         style={{ width: "100%", height: "100%" }}
                         align="flex-end"

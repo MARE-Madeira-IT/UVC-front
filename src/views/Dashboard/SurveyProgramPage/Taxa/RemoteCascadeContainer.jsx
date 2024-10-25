@@ -16,7 +16,6 @@ function RemoteCascadeContainer(props) {
   const [newTaxaCategoryId, setNewTaxaCategoryId] = useState(1);
   const {
     data,
-    onChange,
     value,
     surveyProgramId,
     categories,
@@ -28,6 +27,7 @@ function RemoteCascadeContainer(props) {
     multiple,
     selectCat,
     create = true,
+    ignore,
   } = props;
   const [options, setOptions] = useState([]);
 
@@ -56,6 +56,13 @@ function RemoteCascadeContainer(props) {
       }));
     }
 
+    if (ignore) {
+      optionsAux = [...optionsAux].map((el) => ({
+        ...el,
+        taxas: el?.taxas.filter((taxa) => !ignore.includes(taxa.id)),
+      }));
+    }
+
     setOptions(optionsAux);
   };
 
@@ -63,7 +70,7 @@ function RemoteCascadeContainer(props) {
     if (!loading) {
       updateList();
     }
-  }, [species, categories, data, loading]);
+  }, [species, categories, data, loading, ignore]);
 
   useEffect(() => {
     if (!multiple) {
@@ -82,6 +89,11 @@ function RemoteCascadeContainer(props) {
       }
     }
   }, [options, value]);
+
+  const onChange = (e) => {
+    props.onChange(e);
+    props.changeListener();
+  };
 
   return (
     <>
@@ -116,6 +128,7 @@ function RemoteCascadeContainer(props) {
             }
           }
         }}
+        onClear={() => onChange(null)}
         onSearch={() => setOpenCascader(true)}
         dropdownRender={(menus) => {
           return (

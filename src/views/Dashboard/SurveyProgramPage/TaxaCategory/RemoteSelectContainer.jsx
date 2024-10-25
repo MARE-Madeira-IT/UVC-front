@@ -5,7 +5,7 @@ import { fetchSelectorTaxaCategories } from "../../../../../redux/redux-modules/
 
 function RemoteSelectContainer(props) {
   useEffect(() => {
-    props.fetchSelectorCategories();
+    props.fetchSelectorCategories({ survey_program: props.surveyProgramId });
   }, []);
 
   return (

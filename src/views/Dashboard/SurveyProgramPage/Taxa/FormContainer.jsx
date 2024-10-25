@@ -126,7 +126,7 @@ function FormContainer(props) {
         <Row gutter={16}>
           <Col xs={24} md={12}>
             <Form.Item label="Category" name="category_id" rules={requiredRule}>
-              <RemoteSelectContainer />
+              <RemoteSelectContainer surveyProgramId={surveyProgramId} />
             </Form.Item>
           </Col>
           <Col xs={24} md={12}>
