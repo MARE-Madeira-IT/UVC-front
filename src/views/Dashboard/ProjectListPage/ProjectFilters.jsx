@@ -1,8 +1,9 @@
-import { Cascader, Checkbox, Col, DatePicker, Input, Row, Select } from "antd";
+import { Cascader, Checkbox, Col, Input, Row, Select } from "antd";
 import { useEffect } from "react";
 import { connect } from "react-redux";
-import { fetchWorkspacesSelector } from "../../../../redux/redux-modules/workspace/actions";
+import MyDatePicker from "src/components/DatePicker";
 import styled from "styled-components";
+import { fetchWorkspacesSelector } from "../../../../redux/redux-modules/workspace/actions";
 
 const FilterContainer = styled.section`
   width: 30%;
@@ -114,7 +115,7 @@ function ProjectFilters({
       </Checkbox.Group>
 
       <h3>Date range</h3>
-      <DatePicker.RangePicker
+      <MyDatePicker.RangePicker
         picker="year"
         value={filters.date}
         onChange={(e) => setFilters({ ...filters, date: e })}

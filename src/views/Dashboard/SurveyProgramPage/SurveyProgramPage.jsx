@@ -8,7 +8,6 @@ import Depth from "./Depth/Depth";
 import Function from "./Function/Function";
 import Indicator from "./Indicator/Indicator";
 import Locality from "./Locality/Locality";
-import Members from "./Members/Members";
 import Statistics from "./Statistics";
 import Taxa from "./Taxa/Taxa";
 
@@ -45,25 +44,23 @@ function SurveyProgramPage(props) {
       <Row>
         <Statistics surveyProgramId={id} />
       </Row>
-      <Row gutter={64}>
-        <Col md={24} lg={12}>
-          <Members surveyProgramId={id} />
-        </Col>
-        <Col md={24} lg={12}>
-          <Locality surveyProgramId={id} />
-        </Col>
-      </Row>
       <Row>
         <Taxa surveyProgramId={id} />
       </Row>
       <Row gutter={64}>
+        <Col md={24} lg={16}>
+          <Locality surveyProgramId={id} />
+        </Col>
         <Col md={24} lg={8}>
           <Indicator surveyProgramId={id} />
         </Col>
-        <Col md={24} lg={8}>
+      </Row>
+
+      <Row gutter={64}>
+        <Col md={24} lg={12}>
           <Depth surveyProgramId={id} />
         </Col>
-        <Col md={24} lg={8}>
+        <Col md={24} lg={12}>
           <Function surveyProgramId={id} />
         </Col>
       </Row>

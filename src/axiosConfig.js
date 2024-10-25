@@ -9,6 +9,7 @@ const axiosConfig = axios.create({
   withCredentials: true,
   headers: {
     "Content-Type": "application/json", // Set the default content type
+    "ngrok-skip-browser-warning": "testing",
   },
 });
 
@@ -32,7 +33,10 @@ axiosConfig.interceptors.response.use(
       history.back();
     }
 
-    if (error.response) {
+    if (
+      error.response &&
+      (error.response.status !== 401 || error.config.url.includes("login"))
+    ) {
       openNotification({
         title: error.response.statusText,
         message: error?.response?.data?.message

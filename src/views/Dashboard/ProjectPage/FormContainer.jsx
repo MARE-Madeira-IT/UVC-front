@@ -1,15 +1,16 @@
 import {
   Checkbox,
   Col,
-  DatePicker,
   Form,
   Input,
   Modal,
   Row,
-  Select,
+  Select
 } from "antd";
+import moment from "moment";
 import { useEffect } from "react";
 import { connect } from "react-redux";
+import MyDatePicker from "src/components/DatePicker";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
 
@@ -31,14 +32,16 @@ function FormContainer(props) {
     if (current) {
       let currentProject = projects.find((el) => el.id === current);
 
+      console.log(currentProject);
+
       form.setFieldsValue({
         name: currentProject.name,
         description: currentProject.description,
         geographic_area: currentProject.geographic_area,
         stage: currentProject.stage,
         community_size: currentProject.community_size,
-        start_period: currentProject.start_period,
-        end_period: currentProject.end_period,
+        start_period: moment(currentProject.start_period),
+        end_period: moment(currentProject.end_period),
         public: currentProject.public,
       });
     }
@@ -184,7 +187,8 @@ function FormContainer(props) {
 
           <Col span={12}>
             <Form.Item label="Period of data colections" name="start_period">
-              <DatePicker
+              <MyDatePicker
+                onChange={(e) => console.log(e)}
                 picker="year"
                 placeholder="Start date"
                 style={{ width: "100%" }}
@@ -193,7 +197,7 @@ function FormContainer(props) {
           </Col>
           <Col span={12}>
             <Form.Item label="  " name="end_period">
-              <DatePicker
+              <MyDatePicker
                 picker="year"
                 placeholder="End date"
                 style={{ width: "100%" }}

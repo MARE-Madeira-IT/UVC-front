@@ -100,7 +100,7 @@ function ProjectList(props) {
         handleSearch={handleSearch}
       />
       <ListContainer>
-        <h2>Survey Program(s)</h2>
+        <h2>Project(s)</h2>
 
         {data?.length === 0 ? (
           <Empty />
@@ -149,7 +149,10 @@ function ProjectList(props) {
                 <div className="charateristic">
                   <h4>Period</h4>
                   <p>
-                    {moment(project.start_period).format("YYYY")} /{" "}
+                    {project.start_period
+                      ? moment(project.start_period).format("YYYY")
+                      : "---"}{" "}
+                    /{" "}
                     {project.end_period
                       ? moment(project.end_period).format("YYYY")
                       : "---"}
@@ -157,7 +160,9 @@ function ProjectList(props) {
                 </div>
                 <div className="charateristic">
                   <h4>Geographic area</h4>
-                  <p>{project.geographic_area}</p>
+                  <p>
+                    {project.geographic_area ? project.geographic_area : "N/A"}
+                  </p>
                 </div>
                 <div className="charateristic">
                   <h4>Created</h4>

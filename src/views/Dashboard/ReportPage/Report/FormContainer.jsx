@@ -1,16 +1,8 @@
-import {
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  Row,
-  Select,
-} from "antd";
+import { Col, Form, Input, InputNumber, Modal, Row, Select } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import MyDatePicker from "src/components/DatePicker";
 import { requiredRule } from "src/helper";
 import styled from "styled-components";
 import RemoteSelectContainer from "../../SurveyProgramPage/Depth/RemoteSelectContainer";
@@ -172,7 +164,7 @@ function FormContainer(props) {
           </Col>
           <Col xs={24} md={6}>
             <Form.Item label="Date" name="date" rules={requiredRule}>
-              <DatePicker style={{ width: "100%" }} />
+              <MyDatePicker style={{ width: "100%" }} />
             </Form.Item>
           </Col>
           <Col xs={24} md={6}>
