@@ -11,7 +11,7 @@ export default defineConfig({
         },
     },
     // base: "/",
-    base: "./",
+    base: "https://mare-madeira-it.github.io/UVC-front/",
     preview: {
         port: 3000,
         strictPort: true,
