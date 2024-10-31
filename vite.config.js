@@ -11,18 +11,18 @@ export default defineConfig({
         },
     },
     // base: "/",
-    base: "https://mare-madeira-it.github.io/UVC-front/",
-    preview: {
-        port: 3000,
-        strictPort: true,
-    },
-    server: {
-        watch: {
-            usePolling: true,
-        },
-        port: 3000,
-        strictPort: true,
-        host: true,
-        origin: "http://0.0.0.0:3000",
-    },
+    base: "/UVC-front/",
+    // preview: {
+    //     port: 3000,
+    //     strictPort: true,
+    // },
+    // server: {
+    //     watch: {
+    //         usePolling: true,
+    //     },
+    //     port: 3000,
+    //     strictPort: true,
+    //     host: true,
+    //     origin: "http://0.0.0.0:3000",
+    // },
 });
